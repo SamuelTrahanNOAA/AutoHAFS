@@ -287,8 +287,8 @@ def io1(**kwargs):
 
 where={
     'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
-    'scrub':'/lfs/h2/oar/ptmp/samuel.trahan/',
-    'HAFS':'/lfs/h2/oar/ptmp/samuel.trahan/hafsv1_phase3/',
+    'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
+    'scrub':  '/lfs/h2/oar/stmp/samuel.trahan/',
     'exebase':'supafast',
     'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
     'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
