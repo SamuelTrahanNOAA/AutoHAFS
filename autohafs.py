@@ -9,13 +9,13 @@ def main():
     where={
         'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
         'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
-        'scrub':  '/lfs/h2/oar/stmp/samuel.trahan/',
+        'scrub':  '/lfs/h2/oar/ptmp/samuel.trahan/',
         'exebase':'supafast',
         'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
         'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
     }
 
-    sixteen(**where)
+    dt72(**where)
 
 ########################################################################
     
@@ -34,6 +34,18 @@ def sixteen(**kwargs):
     
 def outer4(**kwargs):
     replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='outer-k2n4-',**kwargs)
+    generate_and_submit(replace)
+
+def dt72(**kwargs):
+    replace=make_hash(inner_nodes=16,
+                      outer_nodes=29,
+                      outer_k_split=2,
+                      outer_n_split=4,
+                      inner_k_split=4,
+                      inner_n_split=9,
+                      dt_atmos=72,
+                      more_prefix='dt72-',
+                      **kwargs)
     generate_and_submit(replace)
 
 def more_nodes(n,**kwargs):
@@ -195,8 +207,10 @@ def make_hash(
         suffix=''
 
     if dt_inner is None:
-        dt_inner = dt_atmos/2.0
+        dt_inner = dt_atmos/2
 
+    assert( (dt_atmos%dt_inner)<0.001 )
+        
     # Make sure mandatory arguments are specified:
     assert(noscrub)
     assert(scrub)
@@ -291,8 +305,8 @@ def make_hash(
         '%module_commands%': str(module_commands),
         '%autohafs_dir%': str(autohafs_dir),
         '%inner_k_split%': '%d'%(inner_k_split,),
-        '%outer_k_split%': '%d'%(outer_k_split,),
         '%inner_n_split%': '%d'%(inner_n_split,),
+        '%outer_k_split%': '%d'%(outer_k_split,),
         '%outer_n_split%': '%d'%(outer_n_split,),
         '%dt_atmos%': str(dt_atmos),
         '%dt_inner%': str(dt_inner),
