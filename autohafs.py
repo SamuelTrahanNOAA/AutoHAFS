@@ -16,11 +16,12 @@ def make_hash(
         OMP_PLACES='cores',
         
         # fies and directories:
-        noscrub=None, # '/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
-        scrub=None, # '/lfs/h2/oar/ptmp/samuel.trahan/',
-        HAFS=None, # '/lfs/h2/oar/ptmp/samuel.trahan/hafsv1_phase3/',
-        exebase=None, # 32bit, the BUILD_NR (third argument to hafs_forecast.fd/tests/compile.sh)
-        template_dir, # '/lfs/h2/oar/ptmp/samuel.trahan/junghoon-reference/',
+        noscrub=None, # '/lfs/h2/oar/esrl/noscrub/samuel.trahan/'
+        scrub=None, # '/lfs/h2/oar/ptmp/samuel.trahan/'
+        HAFS=None, # '/lfs/h2/oar/ptmp/samuel.trahan/hafsv1_phase3/'
+        exebase=None, # '32bit', the BUILD_NR (third argument to hafs_forecast.fd/tests/compile.sh)
+        template_dir=None, # '/lfs/h2/oar/ptmp/samuel.trahan/junghoon-reference/'
+        autohafs_dir=None, # '/lfs/h2/oar/ptmp/samuel.trahan/AutoHAFS/junghoon-reference/'
         
         # FV3 configuration:
         inner_nodes=15,
@@ -58,6 +59,8 @@ def make_hash(
     assert(os.path.isdir(noscrub))
     assert(os.path.isdir(scrub))
     assert(exebase)
+    assert(autohafs_dir)
+    assert(os.path.isdir(autohafs_dir))
         
     # Can't configure this one:
     nodesize=128
@@ -111,7 +114,6 @@ def make_hash(
             fv3_ppn, fv3_tpp,
             hycom_pes, hycom_tpp )
 
-
     result={
         '%template_dir%': str(template_dir),
         '%scrub%': str(scrub),
@@ -141,6 +143,7 @@ def make_hash(
         '%OMP_STACKSIZE%': str(OMP_STACKSIZE),
         '%OMP_PLACES%': str(OMP_PLACES),
         '%module_commands%': str(module_commands),
+        '%autohafs_dir%': str(autohafs_dir),
     }
 
     print('Replacements:')
@@ -189,7 +192,7 @@ def parse_files(indir,outdir,replace,files):
 
 def fill_auto_files(replace):
     outdir=tempfile.mkdtemp(prefix=replace['%prefix%'], dir=replace['%scrub%'])
-    indir=replace['%template_dir%']
+    indir=replace['%autohafs_dir%']
     replace['%name%'] = str(os.path.basename(outdir))
     replace['%dir%'] = str(outdir)
     if not os.access(replace['%exe%'],os.X_OK):
@@ -205,8 +208,11 @@ def fill_auto_files(replace):
             sys.stderr.write(fullfile+": is empty")
 
 ########################################################################
-    
+
+# Quasi-shell commands
+
 def rsync(replace):
+    # Copy template directory contents to run area.
     rsync_command=[ "rsync", "-arv", "--ignore-existing",
                     os.path.join(replace["%template_dir%"],"."),
                     os.path.join(replace['%dir%'],'.') ]
@@ -214,50 +220,61 @@ def rsync(replace):
     sys.stdout.flush()
     subprocess.run(rsync_command,check=True)
 
-def chdir(replace):
-    print('chdir',replace['%dir%'])
-    os.chdir(replace['%dir%'])
-
 def qsub(replace):
+    # Submit the job in the run area. Must chdir first.
     qsub_command=[ "qsub", "hafs_forecast.sh" ]
     print('execute',qsub_command)
     sys.stdout.flush()
     subprocess.run(qsub_command,check=True)
     
 def generate_and_submit(replace):
+    # Generate the run area, chdir there, and submit the job.
     fill_auto_files(replace)
     print('will run in dir',replace['%dir%'])
     rsync(replace)
-    chdir(replace)
+    oldcwd=os.getcwd()
+    print('chdir',replace["%dir%"])
+    os.chdir(replace["%dir%"])
     qsub(replace)
+    print('chdir',oldcwd)
+    os.chdir(oldcwd)
 
 ########################################################################
     
-def debug_test():
-    replace=make_hash(exebase='ftz-nocons-hycom',queue='debug',walltime='00:30:00',hycom_nodes=3)
+def debug_test(**kwargs):
+    replace=make_hash(queue='debug',walltime='00:30:00',hycom_nodes=3,**kwargs)
     generate_and_submit(replace)
     
-def basic_test():
-    replace=make_hash(exebase='ftz-nocons-hycom',queue='dev',walltime='03:00:00')
+def basic_test(**kwargs):
+    replace=make_hash(queue='dev',walltime='03:00:00',**kwargs)
     generate_and_submit(replace)
     
-def sixteen():
+def sixteen(**kwargs):
     for i in range(3):
-        replace=make_hash(exebase='ftz-nocons-hycom',inner_nodes=16,outer_nodes=29,scrub='/lfs/h2/oar/stmp/samuel.trahan/')
+        replace=make_hash(inner_nodes=16,outer_nodes=29,**kwargs)
         generate_and_submit(replace)
 
-def more_nodes(n):
+def more_nodes(n,**kwargs):
     middle=int(16*n/45.)
     for i in [ middle-4, middle-3 ]:
-        replace=make_hash(exebase='ftz-nocons-hycom',inner_nodes=i,outer_nodes=n-i)
+        replace=make_hash(inner_nodes=i,outer_nodes=n-i,**kwargs)
         generate_and_submit(replace)
 
-def hycom1():
-    replace=make_hash(exebase='ftz-nocons-hycom',inner_nodes=16,outer_nodes=29,scrub='/lfs/h2/oar/ptmp/samuel.trahan/',hycom_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00')
+def hycom1(**kwargs):
+    replace=make_hash(inner_nodes=16,outer_nodes=29,hycom_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
     generate_and_submit(replace)
 
-def io1():
-    replace=make_hash(exebase='ftz-nocons-hycom',inner_nodes=16,outer_nodes=29,scrub='/lfs/h2/oar/ptmp/samuel.trahan/',io_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00')
+def io1(**kwargs):
+    replace=make_hash(inner_nodes=16,outer_nodes=29,io_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
     generate_and_submit(replace)
 
-basic_test()
+where={
+    'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
+    'scrub':'/lfs/h2/oar/ptmp/samuel.trahan/',
+    'HAFS':'/lfs/h2/oar/ptmp/samuel.trahan/hafsv1_phase3/',
+    'exebase':'supafast',
+    'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
+    'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
+}
+
+sixteen(**where)
