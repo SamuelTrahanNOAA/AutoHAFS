@@ -15,11 +15,12 @@ def make_hash(
         OMP_STACKSIZE='2048M',
         OMP_PLACES='cores',
         
-        # directories:
-        noscrub='/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
-        scrub='/lfs/h2/oar/ptmp/samuel.trahan/',
-        template='junghoon-reference',
-        exebase='wherever',
+        # fies and directories:
+        noscrub=None, # '/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
+        scrub=None, # '/lfs/h2/oar/ptmp/samuel.trahan/',
+        HAFS=None, # '/lfs/h2/oar/ptmp/samuel.trahan/hafsv1_phase3/',
+        exebase=None, # 32bit, the BUILD_NR (third argument to hafs_forecast.fd/tests/compile.sh)
+        template_dir, # '/lfs/h2/oar/ptmp/samuel.trahan/junghoon-reference/',
         
         # FV3 configuration:
         inner_nodes=15,
@@ -50,19 +51,27 @@ def make_hash(
 
     if dt_inner is None:
         dt_inner = dt_atmos/2.0
+
+    # Make sure mandatory arguments are specified:
+    assert(noscrub)
+    assert(scrub)
+    assert(os.path.isdir(noscrub))
+    assert(os.path.isdir(scrub))
+    assert(exebase)
         
     # Can't configure this one:
     nodesize=128
     
     # directories derived:
-    noscrub='/lfs/h2/oar/esrl/noscrub/samuel.trahan/'
-    template_dir=noscrub+'junghoon-reference/'
-    HAFS=noscrub+'hafsv1_phase3/'
-    HAFS_test_dir=HAFS+'sorc/hafs_forecast.fd/tests/'
+    if not template_dir:
+        template_dir=os.path.join(noscrub,'junghoon-reference/')
+    if not HAFS:
+        HAFS=os.path.join(noscrub,'hafsv1_phase3/')
+    HAFS_test_dir=os.path.join(HAFS,'sorc/hafs_forecast.fd/tests/')
     module_src_dir=HAFS_test_dir
     modules=( 'modules.fv3_'+exebase, 'cray-pals' )
     module_commands = 'module use '+module_src_dir+' ; ' + (' ; '.join([ "module load "+x for x in modules ])) + ' ; module list'
-    exe=HAFS_test_dir+'fv3_'+exebase+'.exe'
+    exe=os.path.join(HAFS_test_dir,'fv3_'+exebase+'.exe')
     
     # FV3 derived:
     fv3_nodes=(inner_nodes+outer_nodes+io_nodes)

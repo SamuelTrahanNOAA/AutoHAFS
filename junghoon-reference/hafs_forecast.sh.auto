@@ -44,7 +44,7 @@ runtime=$(( end-start ))
 initend=$( stat --format=%X mediator.log )
 init_time=$(( initend-start ))
 
-# Time between atm.nest02.f126.nc and end of mpiexec
+# Time between creation of atm.nest02.f126.nc and end of mpiexec
 # which is approximately the time after the last timestep ends
 cleanbegin=$( stat --format=%X atm.nest02.f126.nc )
 cleanup_time=$(( end-cleanbegin ))
@@ -58,6 +58,7 @@ nphase=$(( tphase / 41 ))
 # Wallclock reported by NEMS
 nemswall=$( grep 'total amount of wall' hafs_forecast.out |awk '{print int($8)}' )
 
+mkdir -p %noscrub%/fv3results
 echo "%name% 60 47 126 42 3 %exebase% cores $TOTAL_TASKS $start $initend $cleanbegin $end $runtime $init_time $cleanup_time $tphase $nphase $nemswall %dir%" >> %noscrub%/fv3results/summary
 
 mkdir -p %noscrub%/fv3results/%name%
