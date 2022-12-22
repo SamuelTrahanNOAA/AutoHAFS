@@ -268,7 +268,7 @@ def sixteen(**kwargs):
         generate_and_submit(replace)
     
 def outer4(**kwargs):
-    replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='-outer-k2n4',**kwargs)
+    replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='outer-k2n4-',**kwargs)
     generate_and_submit(replace)
 
 def more_nodes(n,**kwargs):
