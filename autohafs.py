@@ -5,6 +5,149 @@ import os
 import tempfile
 import subprocess
 
+def main():
+    where={
+        'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
+        'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
+        'scrub':  '/lfs/h2/oar/stmp/samuel.trahan/',
+        'exebase':'supafast',
+        'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
+        'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
+    }
+
+    sixteen(**where)
+
+########################################################################
+    
+def debug_test(**kwargs):
+    replace=make_hash(queue='debug',walltime='00:30:00',hycom_nodes=3,**kwargs)
+    generate_and_submit(replace)
+    
+def basic_test(**kwargs):
+    replace=make_hash(queue='dev',walltime='03:00:00',**kwargs)
+    generate_and_submit(replace)
+    
+def sixteen(**kwargs):
+    for i in range(2):
+        replace=make_hash(inner_nodes=16,outer_nodes=29,**kwargs)
+        generate_and_submit(replace)
+    
+def outer4(**kwargs):
+    replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='outer-k2n4-',**kwargs)
+    generate_and_submit(replace)
+
+def more_nodes(n,**kwargs):
+    middle=int(16*n/45.)
+    for i in [ middle-4, middle-3 ]:
+        replace=make_hash(inner_nodes=i,outer_nodes=n-i,**kwargs)
+        generate_and_submit(replace)
+
+def hycom1(**kwargs):
+    replace=make_hash(inner_nodes=16,outer_nodes=29,hycom_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
+    generate_and_submit(replace)
+
+def io1(**kwargs):
+    replace=make_hash(inner_nodes=16,outer_nodes=29,io_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
+    generate_and_submit(replace)
+
+
+########################################################################
+
+# Quasi-shell commands
+    
+def generate_and_submit(replace):
+    # Generate the run area, chdir there, and submit the job.
+    fill_auto_files(replace)
+    print('will run in dir',replace['%dir%'])
+    rsync(replace)
+    oldcwd=os.getcwd()
+    print('chdir',replace["%dir%"])
+    os.chdir(replace["%dir%"])
+    qsub(replace)
+    print('chdir',oldcwd)
+    os.chdir(oldcwd)
+
+def rsync(replace):
+    # Copy template directory contents to run area.
+    rsync_command=[ "rsync", "-arv", "--ignore-existing",
+                    os.path.join(replace["%template_dir%"],"."),
+                    os.path.join(replace['%dir%'],'.') ]
+    print('execute',rsync_command)
+    sys.stdout.flush()
+    subprocess.run(rsync_command,check=True)
+
+def qsub(replace):
+    # Submit the job in the run area. Must chdir first.
+    qsub_command=[ "qsub", "hafs_forecast.sh" ]
+    print('execute',qsub_command)
+    sys.stdout.flush()
+    subprocess.run(qsub_command,check=True)
+
+########################################################################
+
+# Text file processing.
+
+def fill_auto_files(replace):
+    outdir=tempfile.mkdtemp(prefix=replace['%prefix%'], dir=replace['%scrub%'])
+    indir=replace['%autohafs_dir%']
+    replace['%name%'] = str(os.path.basename(outdir))
+    replace['%dir%'] = str(outdir)
+    if not os.access(replace['%exe%'],os.X_OK):
+        sys.stderr.write(replace['%exe%']+': cannot execute\n')
+    files=[ 'hafs_forecast.sh', 'input_nest02.nml', 'input.nml',
+            'model_configure', 'nems.configure', 'clean.sh' ]
+    parse_files(indir,outdir,replace,files)
+    for afile in files:
+        fullfile=os.path.join(outdir,afile)
+        if not os.path.exists(fullfile):
+            sys.stderr.write(fullfile+": does not exist")
+        if not os.path.getsize(fullfile)>0:
+            sys.stderr.write(fullfile+": is empty")
+
+def parse_files(indir,outdir,replace,files):
+    # For each file in `files`, replace text via the `replace` hash
+    # from the *.auto version of the file in `indir` and write the
+    # result to the corresponding file in `outdir` (without ".auto.")
+    for afile in files:
+        infile=os.path.join(indir,afile+".auto")
+        outfile=os.path.join(outdir,afile)
+        with open(infile,'rt') as fd:
+            indata=fd.read()
+        outdata=replacetxt(indata,replace)
+        with open(outfile,'wt') as fd:
+            fd.write(outdata)
+
+def replacetxt(intext,replace):
+    # Apply all text replacements in the `replace` hash to the `intext` string.
+    outtext=str(intext)
+    for rep in replace:
+        outtext=outtext.replace(rep,replace[rep])
+    return outtext
+
+########################################################################
+
+# Calculate variables to replace in text files.
+    
+def best_layout(nodes,ppn,nx):
+    ngrid=nx*nx
+    tasks=nodes*ppn
+    bestx=1
+    besty=tasks
+    bestscore=abs(besty-bestx)
+    for n in range(tasks-1):
+        tx=n+2
+        ty=tasks//tx
+        if tx*ty==tasks:
+            score=abs(ty-tx)
+            if score<bestscore:
+                bestx=tx
+                besty=ty
+                bestscore=score
+    return [ bestx, besty ]
+
+def best_blocksize(layout_x,layout_y,nx):
+    return max(nx//layout_x,nx//layout_y)
+   
 def make_hash(
         # These must match the input nml files, inputs, and bcs:
         inner_grid=601,outer_grid=1201,
@@ -160,138 +303,6 @@ def make_hash(
         print("  %s => %s"%(rep,result[rep]))
     
     return result
-    
-def best_layout(nodes,ppn,nx):
-    ngrid=nx*nx
-    tasks=nodes*ppn
-    bestx=1
-    besty=tasks
-    bestscore=abs(besty-bestx)
-    for n in range(tasks-1):
-        tx=n+2
-        ty=tasks//tx
-        if tx*ty==tasks:
-            score=abs(ty-tx)
-            if score<bestscore:
-                bestx=tx
-                besty=ty
-                bestscore=score
-    return [ bestx, besty ]
 
-def best_blocksize(layout_x,layout_y,nx):
-    return max(nx//layout_x,nx//layout_y)
-
-########################################################################
-
-def replacetxt(intext,replace):
-    # Apply all text replacements in the `replace` hash to the `intext` string.
-    outtext=str(intext)
-    for rep in replace:
-        outtext=outtext.replace(rep,replace[rep])
-    return outtext
-
-def parse_files(indir,outdir,replace,files):
-    # For each file in `files`, replace text via the `replace` hash
-    # from the *.auto version of the file in `indir` and write the
-    # result to the corresponding file in `outdir` (without ".auto.")
-    for afile in files:
-        infile=os.path.join(indir,afile+".auto")
-        outfile=os.path.join(outdir,afile)
-        with open(infile,'rt') as fd:
-            indata=fd.read()
-        outdata=replacetxt(indata,replace)
-        with open(outfile,'wt') as fd:
-            fd.write(outdata)
-
-def fill_auto_files(replace):
-    outdir=tempfile.mkdtemp(prefix=replace['%prefix%'], dir=replace['%scrub%'])
-    indir=replace['%autohafs_dir%']
-    replace['%name%'] = str(os.path.basename(outdir))
-    replace['%dir%'] = str(outdir)
-    if not os.access(replace['%exe%'],os.X_OK):
-        sys.stderr.write(replace['%exe%']+': cannot execute\n')
-    files=[ 'hafs_forecast.sh', 'input_nest02.nml', 'input.nml',
-            'model_configure', 'nems.configure', 'clean.sh' ]
-    parse_files(indir,outdir,replace,files)
-    for afile in files:
-        fullfile=os.path.join(outdir,afile)
-        if not os.path.exists(fullfile):
-            sys.stderr.write(fullfile+": does not exist")
-        if not os.path.getsize(fullfile)>0:
-            sys.stderr.write(fullfile+": is empty")
-
-########################################################################
-
-# Quasi-shell commands
-
-def rsync(replace):
-    # Copy template directory contents to run area.
-    rsync_command=[ "rsync", "-arv", "--ignore-existing",
-                    os.path.join(replace["%template_dir%"],"."),
-                    os.path.join(replace['%dir%'],'.') ]
-    print('execute',rsync_command)
-    sys.stdout.flush()
-    subprocess.run(rsync_command,check=True)
-
-def qsub(replace):
-    # Submit the job in the run area. Must chdir first.
-    qsub_command=[ "qsub", "hafs_forecast.sh" ]
-    print('execute',qsub_command)
-    sys.stdout.flush()
-    subprocess.run(qsub_command,check=True)
-    
-def generate_and_submit(replace):
-    # Generate the run area, chdir there, and submit the job.
-    fill_auto_files(replace)
-    print('will run in dir',replace['%dir%'])
-    rsync(replace)
-    oldcwd=os.getcwd()
-    print('chdir',replace["%dir%"])
-    os.chdir(replace["%dir%"])
-    qsub(replace)
-    print('chdir',oldcwd)
-    os.chdir(oldcwd)
-
-########################################################################
-    
-def debug_test(**kwargs):
-    replace=make_hash(queue='debug',walltime='00:30:00',hycom_nodes=3,**kwargs)
-    generate_and_submit(replace)
-    
-def basic_test(**kwargs):
-    replace=make_hash(queue='dev',walltime='03:00:00',**kwargs)
-    generate_and_submit(replace)
-    
-def sixteen(**kwargs):
-    for i in range(3):
-        replace=make_hash(inner_nodes=16,outer_nodes=29,**kwargs)
-        generate_and_submit(replace)
-    
-def outer4(**kwargs):
-    replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='outer-k2n4-',**kwargs)
-    generate_and_submit(replace)
-
-def more_nodes(n,**kwargs):
-    middle=int(16*n/45.)
-    for i in [ middle-4, middle-3 ]:
-        replace=make_hash(inner_nodes=i,outer_nodes=n-i,**kwargs)
-        generate_and_submit(replace)
-
-def hycom1(**kwargs):
-    replace=make_hash(inner_nodes=16,outer_nodes=29,hycom_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
-    generate_and_submit(replace)
-
-def io1(**kwargs):
-    replace=make_hash(inner_nodes=16,outer_nodes=29,io_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
-    generate_and_submit(replace)
-
-where={
-    'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
-    'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
-    'scrub':  '/lfs/h2/oar/stmp/samuel.trahan/',
-    'exebase':'supafast',
-    'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
-    'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
-}
-
-outer4(**where)
+if __name__ == '__main__':
+    main()
