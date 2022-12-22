@@ -45,6 +45,7 @@ def make_hash(
 
         # naming:
         prefix=None,
+        more_prefix=None,
         suffix=None ):
 
     if suffix is None:
@@ -113,7 +114,9 @@ def make_hash(
             inner_nodes, outer_nodes, io_nodes,
             fv3_ppn, fv3_tpp,
             hycom_pes, hycom_tpp )
-
+    if more_prefix:
+        prefix += more_prefix
+        
     result={
         '%template_dir%': str(template_dir),
         '%scrub%': str(scrub),
@@ -263,6 +266,10 @@ def sixteen(**kwargs):
     for i in range(3):
         replace=make_hash(inner_nodes=16,outer_nodes=29,**kwargs)
         generate_and_submit(replace)
+    
+def outer4(**kwargs):
+    replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='-outer-k2n4',**kwargs)
+    generate_and_submit(replace)
 
 def more_nodes(n,**kwargs):
     middle=int(16*n/45.)
@@ -287,4 +294,4 @@ where={
     'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
 }
 
-sixteen(**where)
+outer4(**where)
