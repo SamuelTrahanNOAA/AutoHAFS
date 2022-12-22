@@ -1,0 +1,68 @@
+#!/bin/sh
+#PBS -joe
+#PBS -o job.log
+#PBS -N %name%
+#PBS -A HWRF-DEV
+#PBS -q %queue%
+#PBS -l select=%select_atm%+%select_ocn%
+#PBS -l place=excl
+#PBS -l walltime=%walltime%
+
+set -e
+
+cd $PBS_O_WORKDIR
+
+date
+
+%module_commands%
+
+set -x
+
+exe="%exe%"
+
+export OMP_STACKSIZE=%OMP_STACKSIZE%
+export OMP_PLACES=%OMP_PLACES%
+
+chmod 755 ./clean.sh
+./clean.sh
+
+start=$( date +%s )
+
+mpiexec --cpu-bind core \
+        -n %atm_pes% -depth %atm_tpp% /usr/bin/env OMP_NUM_THREADS=%atm_tpp% "$exe" \
+      : -n %ocn_pes% -depth %ocn_tpp% /usr/bin/env OMP_NUM_THREADS=%ocn_tpp% "$exe" \
+        > hafs_forecast.out 2> hafs_forecast.err
+
+end=$( date +%s )
+
+set +e
+
+# Total runtime of mpiexec
+runtime=$(( end-start ))
+
+# Time before mediator.log is created
+initend=$( stat --format=%X mediator.log )
+init_time=$(( initend-start ))
+
+# Time between atm.nest02.f126.nc and end of mpiexec
+# which is approximately the time after the last timestep ends
+cleanbegin=$( stat --format=%X atm.nest02.f126.nc )
+cleanup_time=$(( end-cleanbegin ))
+
+# Time spent in phase 1 & 2
+tphase=$( grep phase hafs_forecast.???|awk '{x+=$10 ; c++ } END { print int(2*x/(c)*60*126+0.5) }' )
+
+# Average time spent in phase 1 & 2 in each 3hr period
+nphase=$(( tphase / 41 ))
+
+# Wallclock reported by NEMS
+nemswall=$( grep 'total amount of wall' hafs_forecast.out |awk '{print int($8)}' )
+
+echo "%name% 60 47 126 42 3 %exebase% cores $TOTAL_TASKS $start $initend $cleanbegin $end $runtime $init_time $cleanup_time $tphase $nphase $nemswall %dir%" >> %noscrub%/fv3results/summary
+
+mkdir -p %noscrub%/fv3results/%name%
+ls -ltr --full-time > %noscrub%/fv3results/%name%/timings
+cp -fp hafs_forecast.out hafs_forecast.err hafs_forecast.sh %noscrub%/fv3results/%name%/.
+chmod -R a-w %noscrub%/fv3results/%name%
+
+exit 0
