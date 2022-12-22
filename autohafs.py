@@ -15,15 +15,15 @@ def make_hash(
         OMP_STACKSIZE='2048M',
         OMP_PLACES='cores',
         
-        # fies and directories:
+        # files and directories must be specified by caller:
         noscrub=None, # '/lfs/h2/oar/esrl/noscrub/samuel.trahan/'
         scrub=None, # '/lfs/h2/oar/ptmp/samuel.trahan/'
         HAFS=None, # '/lfs/h2/oar/ptmp/samuel.trahan/hafsv1_phase3/'
-        exebase=None, # '32bit', the BUILD_NR (third argument to hafs_forecast.fd/tests/compile.sh)
         template_dir=None, # '/lfs/h2/oar/ptmp/samuel.trahan/junghoon-reference/'
         autohafs_dir=None, # '/lfs/h2/oar/ptmp/samuel.trahan/AutoHAFS/junghoon-reference/'
         
         # FV3 configuration:
+        exebase='32bit', # to find hafs_forecast.fd/tests/fv3_(exebase).exe
         inner_nodes=15,
         outer_nodes=30,
         io_nodes=2,
@@ -144,6 +144,12 @@ def make_hash(
         '%OMP_PLACES%': str(OMP_PLACES),
         '%module_commands%': str(module_commands),
         '%autohafs_dir%': str(autohafs_dir),
+        '%inner_k_split%': '%d'%(inner_k_split,),
+        '%outer_k_split%': '%d'%(outer_k_split,),
+        '%inner_n_split%': '%d'%(inner_n_split,),
+        '%outer_n_split%': '%d'%(outer_n_split,),
+        '%dt_atmos%': str(dt_atmos),
+        '%dt_inner%': str(dt_inner),
     }
 
     print('Replacements:')
@@ -175,12 +181,16 @@ def best_blocksize(layout_x,layout_y,nx):
 ########################################################################
 
 def replacetxt(intext,replace):
-    outtext=intext
+    # Apply all text replacements in the `replace` hash to the `intext` string.
+    outtext=str(intext)
     for rep in replace:
         outtext=outtext.replace(rep,replace[rep])
     return outtext
 
 def parse_files(indir,outdir,replace,files):
+    # For each file in `files`, replace text via the `replace` hash
+    # from the *.auto version of the file in `indir` and write the
+    # result to the corresponding file in `outdir` (without ".auto.")
     for afile in files:
         infile=os.path.join(indir,afile+".auto")
         outfile=os.path.join(outdir,afile)

@@ -157,7 +157,7 @@
   iovr           = 3
   ltaerosol      = .false.
   ttendlim       = -999
-  dt_inner       = 30
+  dt_inner       = %dt_inner%
   sedi_semi      = .true.
   decfl          = 10
   pdfcld         = .false.

@@ -5,7 +5,7 @@ start_hour:              12
 start_minute:            0
 start_second:            0
 nhours_fcst:             126
-dt_atmos:                60
+dt_atmos:                %dt_atmos%
 calendar:                'julian'
 restart_interval:        3 6 9
 output_1st_tstep_rst:    .false.
