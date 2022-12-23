@@ -98,6 +98,9 @@ def most_square_layout_that_integer_divides_ppn(nodes,ppn,nx,ny):
             continue
         if ny%layout_y:
             continue
+        badness = max(float(layout_x)/layout_y, float(layout_x)/layout_y)
+        if badness>=2:
+            continue
         score=abs(layout_x-layout_y)
         if score<bestscore:
             bestx=layout_x
@@ -113,13 +116,14 @@ def most_square_layout(nodes,ppn,nx,ny):
     for n in range(tasks-1):
         tx=n+2
         ty=tasks//tx
+        badness = max(float(tx)/ty,float(ty)/tx)
+        if badness>=2:
+            continue
         if tx*ty==tasks:
             if nx%tx or ny%ty:
-#                print('bad layout %d %d not div %d %d'%(tx,ty,nx,ny))
                 continue
             score=abs(ty-tx)
             if score<bestscore:
-#                print('good layout %d %d div %d %d'%(tx,ty,nx,ny))
                 bestx=tx
                 besty=ty
                 bestscore=score
