@@ -17,17 +17,22 @@ def main():
     print('must be within %.2f%% of target gridpoints: inner=%d outer=%d'%(accuracy,gridpoints[0],gridpoints[1]))
     
     # Number of FV3 compute nodes:
-    nodes=46
+    nodes=45
 
-    # Number of inner domain nodes:
-    inner=[12,13,14,15,16,17,18,19,20]
+    # Number of inner domain nodes.
+    # The ideal number is somewhere in the range of 14-16.
+    inner=[12,13,14,15,16,17,18,19,20,21]
 
     # Number outer domain nodes:
     outer=[ nodes-i for i in inner]
     
     # Number of MPI ranks per node on fv3 compute nodes
+    # Reasonable numbers are 32, 42, 60, 62, or 64. Anything else has no options for good performance.
     ppn=32
 
+    #layout_algo = most_square_layout
+    layout_algo = reversed_most_square_layout_that_integer_divides_ppn
+    
     print('%d fv3 compute nodes with %d MPI ranks per node'%(nodes,ppn))
     print('inner domain node counts: '+str(inner))
     print('outer domain node counts: '+str(outer))
@@ -38,13 +43,13 @@ def main():
         for igrid in range(len(gridpoints)):
             gridrange=[ gridpoints[igrid]*(100.-accuracy)/100.,
                         gridpoints[igrid]*(100.+accuracy)/100. ]
-            answers[igrid]=closest(gridrange,xyranges[igrid],inner[isize],ppn,'    ',gridpoints[igrid],igrid)
+            answers[igrid]=closest(gridrange,xyranges[igrid],inner[isize],ppn,'    ',gridpoints[igrid],igrid,layout_algo)
         if answers[0] and answers[1]:
             print('%d inner nodes, %d outer nodes ppn=%d:'%(inner[isize],outer[isize],ppn))
             sys.stdout.write('  Grid 0\n'+answers[0])
             sys.stdout.write('  Grid 1\n'+answers[1])
 
-def closest(gridrange,xyrange,nodes,ppn,indent,target,igrid):
+def closest(gridrange,xyrange,nodes,ppn,indent,target,igrid,layout_algo):
     ppes=nodes*ppn
     answer = ''
     for xval in range(xyrange[0],xyrange[1]+1):
@@ -55,8 +60,9 @@ def closest(gridrange,xyrange,nodes,ppn,indent,target,igrid):
                 continue
             xyval=xval*yval
             if not xyval%ppes and xyval<=gridrange[1] and xyval>=gridrange[0]:
+                layout = layout_algo(nodes,ppn,xval,yval)
 #                layout = most_square_layout(nodes,ppn,xval,yval)
-                layout = reversed_most_square_layout_that_integer_divides_ppn(nodes,ppn,xval,yval)
+#                layout = reversed_most_square_layout_that_integer_divides_ppn(nodes,ppn,xval,yval)
                 badness = max(layout[0]/layout[1], layout[1]/layout[0])
                 if badness<2:
                     answer += '%sgrid dims = %4d,%4d;  layout = %2d,%2d;  mpi patch = %.1f,%.1f;  gridpoints = %7d = %7.3f%% of target\n'%(
