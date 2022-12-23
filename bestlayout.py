@@ -5,8 +5,8 @@ def main():
     gridpoints=[601*601,
                 1201*1201]
 
-    # How close the number of gridpoints must be to those numbers in percent:
-    accuracy=1.5
+    # How close the number of gridpoints must be to those numbers in percent.
+    accuracy=1
 
     # Allowed ranges of possible grid side lengths for each domain:
     xyranges=[ [588,612],
