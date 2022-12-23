@@ -11,6 +11,8 @@ def main():
     # Allowed ranges of possible grid side lengths for each domain:
     xyranges=[ [588,612],
                [1176,1224] ]
+
+    # Number of FV3 compute nodes:
     nodes=45
 
     # Number of inner domain nodes:
