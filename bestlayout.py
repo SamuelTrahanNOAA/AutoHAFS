@@ -8,11 +8,11 @@ def main():
                 1201*1201]
 
     # How close the number of gridpoints must be to those numbers in percent.
-    accuracy=1.5
+    accuracy=2
 
     # Allowed ranges of possible grid side lengths for each domain:
-    xyranges=[ [580,620],
-               [1180,1240] ]
+    xyranges=[ [570,630],
+               [1140,1260] ]
 
     print('must be within %.2f%% of target gridpoints: inner=%d outer=%d'%(accuracy,gridpoints[0],gridpoints[1]))
     
@@ -26,32 +26,36 @@ def main():
     outer=[ nodes-i for i in inner]
     
     # Number of MPI ranks per node on fv3 compute nodes
-    ppn=42
+    ppn=32
 
     print('%d fv3 compute nodes with %d MPI ranks per node'%(nodes,ppn))
     print('inner domain node counts: '+str(inner))
     print('outer domain node counts: '+str(outer))
     print()
+    
     for isize in range(len(inner)):
-        print('%d inner nodes, %d outer nodes ppn=%d:'%(inner[isize],outer[isize],ppn))
         answers=['','']
         for igrid in range(len(gridpoints)):
-            gridrange=[ int(gridpoints[igrid]*(100-accuracy))//100,
-                        int(gridpoints[igrid]*(100+accuracy))//100 ]
-            answers[igrid]=closest(gridrange,xyranges[igrid],inner[isize],ppn,'    ',gridpoints[igrid])
+            gridrange=[ gridpoints[igrid]*(100.-accuracy)/100.,
+                        gridpoints[igrid]*(100.+accuracy)/100. ]
+            answers[igrid]=closest(gridrange,xyranges[igrid],inner[isize],ppn,'    ',gridpoints[igrid],igrid)
         if answers[0] and answers[1]:
+            print('%d inner nodes, %d outer nodes ppn=%d:'%(inner[isize],outer[isize],ppn))
             sys.stdout.write('  Grid 0\n'+answers[0])
             sys.stdout.write('  Grid 1\n'+answers[1])
-        else:
-            print('  INVALID')
 
-def closest(gridrange,xyrange,nodes,ppn,indent,target):
+def closest(gridrange,xyrange,nodes,ppn,indent,target,igrid):
     ppes=nodes*ppn
     answer = ''
     for xval in range(xyrange[0],xyrange[1]+1):
+        if igrid>0 and (xval-1)%3:
+            continue
         for yval in range(xyrange[0],xyrange[1]+1):
+            if igrid>0 and (yval-1)%3:
+                continue
             xyval=xval*yval
             if not xyval%ppes and xyval<=gridrange[1] and xyval>=gridrange[0]:
+#                layout = most_square_layout(nodes,ppn,xval,yval)
                 layout = reversed_most_square_layout_that_integer_divides_ppn(nodes,ppn,xval,yval)
                 badness = max(layout[0]/layout[1], layout[1]/layout[0])
                 if badness<2:
@@ -64,6 +68,8 @@ def closest(gridrange,xyrange,nodes,ppn,indent,target):
                         xyval,
                         xyval/float(target)*100
                     )
+#                elif badness<10:
+#                    print('discard layout %d %d due to badness %f'%(layout[0],layout[1],badness))
     return answer
 
 def reversed_most_square_layout_that_integer_divides_ppn(nodes,ppn,nx,ny):
@@ -91,6 +97,26 @@ def most_square_layout_that_integer_divides_ppn(nodes,ppn,nx,ny):
             bestx=layout_x
             besty=layout_y
             bestscore=score
+    return [ bestx, besty ]
+
+def most_square_layout(nodes,ppn,nx,ny):
+    tasks=nodes*ppn
+    bestx=1
+    besty=tasks
+    bestscore=abs(besty-bestx)
+    for n in range(tasks-1):
+        tx=n+2
+        ty=tasks//tx
+        if tx*ty==tasks:
+            if nx%tx or ny%ty:
+#                print('bad layout %d %d not div %d %d'%(tx,ty,nx,ny))
+                continue
+            score=abs(ty-tx)
+            if score<bestscore:
+#                print('good layout %d %d div %d %d'%(tx,ty,nx,ny))
+                bestx=tx
+                besty=ty
+                bestscore=score
     return [ bestx, besty ]
 
 if __name__ == '__main__':
