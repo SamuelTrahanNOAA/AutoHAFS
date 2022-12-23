@@ -22,7 +22,7 @@ def main():
 ########################################################################
 
 def layout_tests(**kwargs):
-    inner_add = range(5)
+    inner_add = range(4)
     inner_min = 14
     node_count = 45
     these = {
@@ -39,7 +39,7 @@ def layout_tests(**kwargs):
                               inner_nodes=inner_nodes,outer_nodes=outer_nodes,
                               outer_k_split=2,outer_n_split=4,
                               **kwargs)
-    generate_and_submit(replace)
+            generate_and_submit(replace)
     
 def layout_tests_15(**kwargs):
     these = {
