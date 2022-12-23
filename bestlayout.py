@@ -1,14 +1,26 @@
 #! /usr/bin/env python3
 
 def main():
-    gridpoints=[601*601,1201*1201]
-    xyranges=[ [588,612], [1176,1224] ]
-    nodes=45
-    
-    inner=[12,13,14,15,16,17,18,19,20]
-    ppn=42
-    outer=[ nodes-i for i in inner]
+    # Target number of gridpoints in each domain:
+    gridpoints=[601*601,
+                1201*1201]
+
+    # How close the number of gridpoints must be to those numbers in percent:
     accuracy=1.5
+
+    # Allowed ranges of possible grid side lengths for each domain:
+    xyranges=[ [588,612],
+               [1176,1224] ]
+    nodes=45
+
+    # Number of inner domain nodes:
+    inner=[12,13,14,15,16,17,18,19,20]
+
+    # Number outer domain nodes:
+    outer=[ nodes-i for i in inner]
+
+    # Number of MPI ranks per node on fv3 compute nodes
+    ppn=42
 
     for isize in range(len(inner)):
         print('%d inner nodes, %d outer nodes ppn=%d:'%(inner[isize],outer[isize],ppn))
