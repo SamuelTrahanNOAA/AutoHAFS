@@ -6,6 +6,7 @@ import tempfile
 import subprocess
 
 def main():
+
     where={
         'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
         'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
@@ -15,28 +16,64 @@ def main():
         'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
     }
 
-    dt72(**where)
+
+    layout_tests(**where)
 
 ########################################################################
+
+def layout_tests(**kwargs):
+    inner_add = range(5)
+    inner_min = 14
+    node_count = 45
+    these = {
+        'lay-divppn-': most_square_layout_that_integer_divides_ppn,
+        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
+        'lay-square-': most_square_layout,
+    }
+    for iadd in inner_add:
+        inner_nodes = iadd+inner_min
+        outer_nodes = node_count-inner_nodes
+        for more_prefix, best_layout in these.items():
+            replace=make_hash(more_prefix=more_prefix+'outer-k2n4-',
+                              best_layout=best_layout,
+                              inner_nodes=inner_nodes,outer_nodes=outer_nodes,
+                              outer_k_split=2,outer_n_split=4,
+                              **kwargs)
+    generate_and_submit(replace)
+    
+def layout_tests_15(**kwargs):
+    these = {
+        'lay-divppn-': most_square_layout_that_integer_divides_ppn,
+        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
+        # 'lay-square-': most_square_layout,
+    }
+    for more_prefix, best_layout in these.items():
+        replace=make_hash(more_prefix=more_prefix,best_layout=best_layout,**kwargs)
+        generate_and_submit(replace)
     
 def debug_test(**kwargs):
-    replace=make_hash(queue='debug',walltime='00:30:00',hycom_nodes=3,**kwargs)
+    # Run with the defaults, but put it in the debug queue
+    replace=make_hash(queue='debug',walltime='00:30:00',**kwargs)
     generate_and_submit(replace)
-    
+
 def basic_test(**kwargs):
-    replace=make_hash(queue='dev',walltime='03:00:00',**kwargs)
+    # Run with the defaults
+    replace=make_hash(**kwargs)
     generate_and_submit(replace)
-    
-def sixteen(**kwargs):
-    for i in range(2):
+
+def sixteen_node_config(**kwargs):
+    # best config so far: fv3 with 16 nodes for inner and 29 for outer
+    for i in range(3): # submit 3 of them
         replace=make_hash(inner_nodes=16,outer_nodes=29,**kwargs)
         generate_and_submit(replace)
     
 def outer4(**kwargs):
+    # 16 node config with alternative n_split in outer domain.
     replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='outer-k2n4-',**kwargs)
     generate_and_submit(replace)
 
 def dt72(**kwargs):
+    # 16 node config with 72s timestep
     replace=make_hash(inner_nodes=16,
                       outer_nodes=29,
                       outer_k_split=2,
@@ -48,17 +85,22 @@ def dt72(**kwargs):
                       **kwargs)
     generate_and_submit(replace)
 
-def more_nodes(n,**kwargs):
+def alternative_fv3_compute_node_count(n,**kwargs):
+    # Try n fv3 compute nodes with nine different inner vs. outer node
+    # counts.  Does not change the I/O or ocean nodes, so the total
+    # job size is n+4 nodes.
     middle=int(16*n/45.)
-    for i in [ middle-4, middle-3 ]:
+    for i in [ middle-4, middle+4 ]:
         replace=make_hash(inner_nodes=i,outer_nodes=n-i,**kwargs)
         generate_and_submit(replace)
 
 def hycom1(**kwargs):
+    # cram hycom&mediator onto one node - ~500 second slower init time
     replace=make_hash(inner_nodes=16,outer_nodes=29,hycom_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
     generate_and_submit(replace)
 
 def io1(**kwargs):
+    # cram fv3 io onto one node - sometimes crashes
     replace=make_hash(inner_nodes=16,outer_nodes=29,io_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
     generate_and_submit(replace)
 
@@ -139,8 +181,34 @@ def replacetxt(intext,replace):
 ########################################################################
 
 # Calculate variables to replace in text files.
-    
-def best_layout(nodes,ppn,nx):
+
+def most_square_layout_that_integer_divides_ppn(nodes,ppn,nx):
+    ngrid=nx*nx
+    tasks=nodes*ppn
+    bestx=ppn
+    besty=nodes
+    bestscore=abs(bestx-besty)
+    for layout_x_2 in range(ppn-1):
+        layout_x = layout_x_2+2
+        if ppn%layout_x:
+            print(ppn,'not divisible by',layout_x)
+            continue # ppn not divisible by layout_x
+        layout_y = tasks//layout_x
+        if layout_x*layout_y != tasks:
+            print('bad layout')
+            continue # safeguard; should not get here
+        score=abs(layout_x-layout_y)
+        if score<bestscore:
+            bestx=layout_x
+            besty=layout_y
+            bestscore=score
+    return [ bestx, besty ]
+
+def reversed_most_square_layout_that_integer_divides_ppn(nodes,ppn,nx):
+    [ layout_y, layout_x ] = most_square_layout_that_integer_divides_ppn(nodes,ppn,nx)
+    return [ layout_x, layout_y ]
+
+def most_square_layout(nodes,ppn,nx):
     ngrid=nx*nx
     tasks=nodes*ppn
     bestx=1
@@ -169,7 +237,7 @@ def make_hash(
         walltime='03:30:00',
         OMP_STACKSIZE='2048M',
         OMP_PLACES='cores',
-        
+
         # files and directories must be specified by caller:
         noscrub=None, # '/lfs/h2/oar/esrl/noscrub/samuel.trahan/'
         scrub=None, # '/lfs/h2/oar/ptmp/samuel.trahan/'
@@ -194,6 +262,9 @@ def make_hash(
         inner_layout = None,
         outer_layout = None,
     
+        # Choose algorithms:
+        best_layout=most_square_layout,
+        
         #hycom configuration:
         hycom_nodes=2,
         hycom_pes=120,
