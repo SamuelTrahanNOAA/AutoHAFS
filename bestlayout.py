@@ -8,7 +8,7 @@ def main():
                 1201*1201]
 
     # How close the number of gridpoints must be to those numbers in percent.
-    accuracy=2
+    accuracy=5
 
     # Allowed ranges of possible grid side lengths for each domain:
     xyranges=[ [570,630],
@@ -17,7 +17,7 @@ def main():
     print('must be within %.2f%% of target gridpoints: inner=%d outer=%d'%(accuracy,gridpoints[0],gridpoints[1]))
     
     # Number of FV3 compute nodes:
-    nodes=45
+    nodes=46
 
     # Number of inner domain nodes:
     inner=[12,13,14,15,16,17,18,19,20]
@@ -48,10 +48,10 @@ def closest(gridrange,xyrange,nodes,ppn,indent,target,igrid):
     ppes=nodes*ppn
     answer = ''
     for xval in range(xyrange[0],xyrange[1]+1):
-        if igrid>0 and (xval-1)%3:
+        if igrid==0 and (xval-1)%3:
             continue
         for yval in range(xyrange[0],xyrange[1]+1):
-            if igrid>0 and (yval-1)%3:
+            if igrid==0 and (yval-1)%3:
                 continue
             xyval=xval*yval
             if not xyval%ppes and xyval<=gridrange[1] and xyval>=gridrange[0]:
