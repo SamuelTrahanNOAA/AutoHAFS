@@ -1,0 +1,33 @@
+#! /bin/sh
+
+dt=${1:-%dt_atmos%}
+
+runtime() {
+	 awk '{
+             phase_time_count+=$10;
+             phase_count++
+	     if(phase_count%2 == 0) {
+	        phases=phase_count;
+		phase_time=phase_time_count;
+	     }
+           }
+         END{
+             kdt=phases/2;
+             dt='$dt';
+             valid_time=dt*kdt;  # seconds
+             simulation_length=126*3600;  # seconds
+	     expected_phase_runtime=phase_time*simulation_length/valid_time;
+             print(int(expected_phase_runtime+0.5))
+           }'
+}
+
+grep phase hafs_forecast.???|runtime
+n=$( grep phase hafs_forecast.??? | tail -$(( 21600/dt )) | runtime)
+
+echo $n
+m=$(( n/42 ))
+echo $n $m
+echo
+ls -ltr --full-time *nc|tail;date
+echo
+qstat -u $USER

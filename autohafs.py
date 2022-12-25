@@ -10,80 +10,129 @@ def main():
     where={
         'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
         'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
-        'scrub':  '/lfs/h2/oar/ptmp/samuel.trahan/',
+#        'scrub':  '/lfs/h2/oar/ptmp/samuel.trahan/',
         'exebase':'supafast',
         'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
         'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
     }
 
-
-    layout_tests(**where)
-
+    dt72x128node(**where)
+    
 ########################################################################
 
+def decomp_tests(**kwargs):
+    replace=make_hash(queue='debug',walltime='00:30:00',
+              inner_nodes=15,outer_nodes=30,
+              comp_ppn=60,comp_tpp=2,
+              inner_layout=[15,60],
+              outer_layout=[120,15],
+              best_layout=None,
+              more_prefix='decomp-test-',**kwargs)
+    generate_and_submit(replace)
+    replace=make_hash(queue='debug',walltime='00:30:00',
+              inner_nodes=25,outer_nodes=25,
+              comp_ppn=40,comp_tpp=3,
+              inner_layout=[25,40],
+              outer_layout=[40,25],
+              best_layout=None,
+              more_prefix='decomp-test-',**kwargs)
+    generate_and_submit(replace)
+    
 def layout_tests(**kwargs):
-    inner_add = range(4)
-    inner_min = 14
+    dts = [ 60, 72 ]
+    inners = [ 14, 15, 17 ]
     node_count = 45
     these = {
         'lay-divppn-': most_square_layout_that_integer_divides_ppn,
-        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
-        'lay-square-': most_square_layout,
+        #'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
+        #'lay-square-': most_square_layout,
     }
-    for iadd in inner_add:
-        inner_nodes = iadd+inner_min
-        outer_nodes = node_count-inner_nodes
-        for more_prefix, best_layout in these.items():
-            replace=make_hash(more_prefix=more_prefix+'outer-k2n4-',
-                              best_layout=best_layout,
-                              inner_nodes=inner_nodes,outer_nodes=outer_nodes,
-                              outer_k_split=2,outer_n_split=4,
-                              **kwargs)
-            generate_and_submit(replace)
-    
-def layout_tests_15(**kwargs):
-    these = {
-        'lay-divppn-': most_square_layout_that_integer_divides_ppn,
-        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
-        # 'lay-square-': most_square_layout,
-    }
-    for more_prefix, best_layout in these.items():
-        replace=make_hash(more_prefix=more_prefix,best_layout=best_layout,**kwargs)
-        generate_and_submit(replace)
-    
-def debug_test(**kwargs):
-    # Run with the defaults, but put it in the debug queue
-    replace=make_hash(queue='debug',walltime='00:30:00',**kwargs)
-    generate_and_submit(replace)
-
-def basic_test(**kwargs):
-    # Run with the defaults
-    replace=make_hash(**kwargs)
-    generate_and_submit(replace)
-
-def sixteen_node_config(**kwargs):
-    # best config so far: fv3 with 16 nodes for inner and 29 for outer
-    for i in range(3): # submit 3 of them
-        replace=make_hash(inner_nodes=16,outer_nodes=29,**kwargs)
-        generate_and_submit(replace)
-    
-def outer4(**kwargs):
-    # 16 node config with alternative n_split in outer domain.
-    replace=make_hash(inner_nodes=16,outer_nodes=29,outer_k_split=2,outer_n_split=4,more_prefix='outer-k2n4-',**kwargs)
-    generate_and_submit(replace)
+    for dt_atmos in dts:
+        for inner_nodes in inners:
+            outer_nodes = node_count-inner_nodes
+            dtprefix='dt'+str(dt_atmos)
+            for more_prefix, best_layout in these.items():
+                args={
+                        'more_prefix':more_prefix+'ok2n4-ik4n6-'+dtprefix+'-',
+                        'best_layout':best_layout,
+                        'inner_nodes':inner_nodes,
+                        'outer_nodes':outer_nodes,
+                        'comp_ppn':42,
+                        'comp_tpp':3,
+                        'outer_k_split':2,
+                        'outer_n_split':4,
+                        }
+                for k,v in kwargs.items():
+                    if not k in args:
+                        args[k]=v
+                if dt_atmos==60:
+                    args['inner_k_split']=4
+                    args['inner_n_split']=6
+                elif dt_atmos==72:
+                    args['inner_k_split']=4
+                    args['inner_n_split']=9
+                else:
+                    raise('bad dt atmos '+str(dt_atmos))
+                replace=make_hash(**args)
+                generate_and_submit(replace)
 
 def dt72(**kwargs):
     # 16 node config with 72s timestep
     replace=make_hash(inner_nodes=16,
                       outer_nodes=29,
+                      comp_ppn=42,
+                      comp_tpp=3,
+                      write_tasks_per_group=8,
+                      io_ppn=16,
+                      io_tpp=8,
+                      io_omp_num_threads=4,
                       outer_k_split=2,
                       outer_n_split=4,
                       inner_k_split=4,
                       inner_n_split=9,
                       dt_atmos=72,
-                      more_prefix='dt72-',
+                      OMP_STACKSIZE="128M",
+                      more_prefix='dt72-stack128-',
                       **kwargs)
     generate_and_submit(replace)
+
+def dt72x128node(**kwargs):
+    fv3_compute_nodes=46
+    inner_nodes_list=[ 15, 16, 17 ]
+    isubmit=0
+    these = {
+        #'lay-divppn-': most_square_layout_that_integer_divides_ppn,
+        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
+        #'lay-square-': most_square_layout,
+    }
+    for i in 1 2:
+        for more_prefix, best_layout in these.items():
+            for inner_nodes in inner_nodes_list:
+                isubmit+=1
+                if isubmit<=5:
+                    scrub='/lfs/h2/oar/ptmp/samuel.trahan/'
+                else:
+                    scrub='/lfs/h2/oar/stmp/samuel.trahan/'
+                outer_nodes=fv3_compute_nodes-inner_nodes
+                replace=make_hash(inner_nodes=inner_nodes,
+                                  outer_nodes=outer_nodes,
+                                  comp_ppn=32,
+                                  comp_tpp=4,
+                                  write_tasks_per_group=8,
+                                  io_ppn=16,
+                                  io_tpp=8,
+                                  io_omp_num_threads=4,
+                                  outer_k_split=2,
+                                  outer_n_split=4,
+                                  inner_k_split=4,
+                                  inner_n_split=9,
+                                  dt_atmos=72,
+                                  walltime='02:20:00',
+                                  scrub=scrub,
+                                  OMP_STACKSIZE="128M",
+                                  more_prefix='dt72-st128-'+more_prefix,
+                                  **kwargs)
+                generate_and_submit(replace)
 
 def alternative_fv3_compute_node_count(n,**kwargs):
     # Try n fv3 compute nodes with nine different inner vs. outer node
@@ -149,7 +198,7 @@ def fill_auto_files(replace):
     if not os.access(replace['%exe%'],os.X_OK):
         sys.stderr.write(replace['%exe%']+': cannot execute\n')
     files=[ 'hafs_forecast.sh', 'input_nest02.nml', 'input.nml',
-            'model_configure', 'nems.configure', 'clean.sh' ]
+            'model_configure', 'nems.configure', 'clean.sh', 'lookit.sh' ]
     parse_files(indir,outdir,replace,files)
     for afile in files:
         fullfile=os.path.join(outdir,afile)
@@ -246,13 +295,16 @@ def make_hash(
         autohafs_dir=None, # '/lfs/h2/oar/ptmp/samuel.trahan/AutoHAFS/junghoon-reference/'
         
         # FV3 configuration:
-        exebase='32bit', # to find hafs_forecast.fd/tests/fv3_(exebase).exe
-        inner_nodes=15,
-        outer_nodes=30,
-        io_nodes=2,
+        exebase='32bit', # to find hafs_forecast.fd/tests/compute_(exebase).exe
+        inner_nodes=16,
+        outer_nodes=29,
+        io_ppn=None,
+        io_tpp=None,
+        io_omp_num_threads=None,
+        write_tasks_per_group=None,
         write_groups=2,
-        fv3_ppn=42,
-        fv3_tpp=3,
+        comp_ppn=42,
+        comp_tpp=3,
         outer_k_split = 2,
         outer_n_split = 5,
         inner_k_split = 4,
@@ -280,6 +332,18 @@ def make_hash(
     if dt_inner is None:
         dt_inner = dt_atmos/2
 
+    if io_ppn is None:
+        io_ppn=comp_ppn
+        
+    if io_tpp is None:
+        io_tpp=comp_tpp
+
+    if io_omp_num_threads is None:
+        io_omp_num_threads=io_tpp
+        
+    if write_tasks_per_group is None:
+        write_tasks_per_group=io_ppn
+        
     assert( (dt_atmos%dt_inner)<0.001 )
         
     # Make sure mandatory arguments are specified:
@@ -302,29 +366,35 @@ def make_hash(
     HAFS_test_dir=os.path.join(HAFS,'sorc/hafs_forecast.fd/tests/')
     module_src_dir=HAFS_test_dir
     modules=( 'modules.fv3_'+exebase, 'cray-pals' )
-    module_commands = 'module use '+module_src_dir+' ; ' + (' ; '.join([ "module load "+x for x in modules ])) + ' ; module list'
+    module_loads = (' ; '.join([ "module load "+x for x in modules ]))
+    module_commands = 'module use '+module_src_dir+' ; ' \
+                      + module_loads + ' ; module list'
     exe=os.path.join(HAFS_test_dir,'fv3_'+exebase+'.exe')
-    
-    # FV3 derived:
-    fv3_nodes=(inner_nodes+outer_nodes+io_nodes)
-    fv3_cpus=fv3_ppn*fv3_tpp
-    inner_pes=inner_nodes*fv3_ppn
-    outer_pes=outer_nodes*fv3_ppn
-    fv3_pes=fv3_nodes*fv3_ppn
-    write_tasks_per_group=io_nodes*fv3_ppn//write_groups
-    assert(write_tasks_per_group*write_groups==io_nodes*fv3_ppn)
+
+    # FV3 compute derived:
+    comp_nodes=(inner_nodes+outer_nodes)
+    comp_cpus=comp_ppn*comp_tpp
+    inner_pes=inner_nodes*comp_ppn
+    outer_pes=outer_nodes*comp_ppn
+    comp_pes=comp_nodes*comp_ppn
     if inner_layout is None:
-        ( inner_layout_x, inner_layout_y ) = best_layout(inner_nodes,fv3_ppn,inner_grid)
+        ( inner_layout_x, inner_layout_y ) = best_layout(inner_nodes,comp_ppn,inner_grid)
     else:
         ( inner_layout_x, inner_layout_y ) = inner_layout
         assert(inner_layout_x*inner_layout_y == inner_pes)
     if outer_layout is None:
-        ( outer_layout_x, outer_layout_y ) = best_layout(outer_nodes,fv3_ppn,outer_grid)
+        ( outer_layout_x, outer_layout_y ) = best_layout(outer_nodes,comp_ppn,outer_grid)
     else:
         ( outer_layout_x, outer_layout_y ) = outer_layout
         assert(outer_layout_x*outer_layout_y == outer_pes)
     inner_blocksize=best_blocksize(inner_layout_x,inner_layout_y,inner_grid)
     outer_blocksize=best_blocksize(outer_layout_x,outer_layout_y,outer_grid)
+
+    # FV3 derived:
+    io_pes=write_tasks_per_group*write_groups
+    io_nodes=(io_pes*io_tpp+nodesize-1)//nodesize
+    io_cpus=io_ppn*io_tpp
+    assert(io_ppn==io_pes//io_nodes)
 
     # Hycom derived:
     hycom_ppn=hycom_pes//hycom_nodes
@@ -333,14 +403,15 @@ def make_hash(
     hycom_cpus=hycom_ppn*hycom_tpp
     
     # nems.configure:
-    fv3_range=( 0, fv3_pes-1 )
-    hycom_range=( fv3_pes, fv3_pes+hycom_pes-1 )
+    atm_pes=io_pes+comp_pes
+    atm_range=( 0, atm_pes-1 )
+    ocn_range=( atm_pes, atm_pes+hycom_pes-1 )
 
     if not prefix:
-        prefix="%s-in%dou%dio%dp%dt%d-hy%dt%d-"%(
+        prefix="%s-n%do%dp%dt%d-io%dw%dp%d-hy%dt%d-"%(
             exebase,
-            inner_nodes, outer_nodes, io_nodes,
-            fv3_ppn, fv3_tpp,
+            inner_nodes, outer_nodes, comp_ppn, comp_tpp,
+            write_groups, write_tasks_per_group, io_ppn,
             hycom_pes, hycom_tpp )
     if more_prefix:
         prefix += more_prefix
@@ -351,11 +422,14 @@ def make_hash(
         '%noscrub%': str(noscrub),
         '%prefix%': str(prefix),
         '%suffix%': str(suffix),
-        '%ATM_petlist_bounds%': "%04d %04d"%fv3_range,
-        '%OCN_petlist_bounds%': "%04d %04d"%hycom_range,
-        '%MED_petlist_bounds%': "%04d %04d"%hycom_range,
-        '%atm_pes%': '%d'%( fv3_pes, ),
-        '%atm_tpp%': '%d'%( fv3_tpp, ),
+        '%ATM_petlist_bounds%': "%04d %04d"%atm_range,
+        '%OCN_petlist_bounds%': "%04d %04d"%ocn_range,
+        '%MED_petlist_bounds%': "%04d %04d"%ocn_range,
+        '%comp_pes%': '%d'%( comp_pes, ),
+        '%comp_tpp%': '%d'%( comp_tpp, ),
+        '%io_pes%': '%d'%( io_pes, ),
+        '%io_tpp%': '%d'%( io_tpp, ),
+        '%io_omp_num_threads%': '%d'%( io_omp_num_threads, ),
         '%ocn_pes%': '%d'%( hycom_pes, ),
         '%ocn_tpp%': '%d'%( hycom_tpp, ),
         '%write_tasks_per_group%': "%d"%write_tasks_per_group,
@@ -365,7 +439,8 @@ def make_hash(
         '%outer_layout%': "%d,%d"%( outer_layout_x, outer_layout_y ),
         '%inner_layout%': "%d,%d"%( inner_layout_x, inner_layout_y ),
         '%grid_pes%': "%d,%d"%( outer_pes, inner_pes ),
-        '%select_atm%': "%d:mpiprocs=%d:ompthreads=%d:ncpus=%d"%( fv3_nodes,fv3_ppn,fv3_tpp,fv3_cpus ),
+        '%select_comp%': "%d:mpiprocs=%d:ompthreads=%d:ncpus=%d"%( comp_nodes,comp_ppn,comp_tpp,comp_cpus ),
+        '%select_io%': "%d:mpiprocs=%d:ompthreads=%d:ncpus=%d"%( io_nodes,io_ppn,io_tpp,io_cpus ),
         '%select_ocn%': "%d:mpiprocs=%d:ompthreads=%d:ncpus=%d"%( hycom_nodes,hycom_ppn,hycom_tpp,hycom_cpus ),
         '%queue%': str(queue),
         '%walltime%': str(walltime),

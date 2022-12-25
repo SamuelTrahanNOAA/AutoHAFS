@@ -4,7 +4,7 @@
 #PBS -N %name%
 #PBS -A HWRF-DEV
 #PBS -q %queue%
-#PBS -l select=%select_atm%+%select_ocn%
+#PBS -l select=%select_comp%+%select_io%+%select_ocn%
 #PBS -l place=excl
 #PBS -l walltime=%walltime%
 
@@ -29,7 +29,8 @@ chmod 755 ./clean.sh
 start=$( date +%s )
 
 mpiexec --cpu-bind core \
-        -n %atm_pes% -depth %atm_tpp% /usr/bin/env OMP_NUM_THREADS=%atm_tpp% "$exe" \
+        -n %comp_pes% -depth %comp_tpp% /usr/bin/env OMP_NUM_THREADS=%comp_tpp% "$exe" \
+      : -n %io_pes% -depth %io_tpp% /usr/bin/env OMP_NUM_THREADS=%io_omp_num_threads% "$exe" \
       : -n %ocn_pes% -depth %ocn_tpp% /usr/bin/env OMP_NUM_THREADS=%ocn_tpp% "$exe" \
         > hafs_forecast.out 2> hafs_forecast.err
 
@@ -49,11 +50,30 @@ init_time=$(( initend-start ))
 cleanbegin=$( stat --format=%X atm.nest02.f126.nc )
 cleanup_time=$(( end-cleanbegin ))
 
+runtime() {
+	 awk '{
+             phase_time_count+=$10;
+             phase_count++;
+	     if(phase_count%2 == 0) {
+	        phases=phase_count;
+		phase_time=phase_time_count;
+	     }
+           }
+         END{
+             kdt=phases/2;
+             dt=%dt_atmos%;
+             valid_time=dt*kdt;  # seconds
+             simulation_length=126*3600;  # seconds
+	     expected_phase_runtime=phase_time*simulation_length/valid_time;
+             print(int(expected_phase_runtime+0.5))
+           }'
+}
+
 # Time spent in phase 1 & 2
-tphase=$( grep phase hafs_forecast.???|awk '{x+=$10 ; c++ } END { print int(2*x/(c)*%dt_atmos%*126+0.5) }' )
+tphase=$( grep phase hafs_forecast.??? )
 
 # Average time spent in phase 1 & 2 in each 3hr period
-nphase=$(( tphase / 41 ))
+nphase=$(( tphase / 42 ))
 
 # Wallclock reported by NEMS
 nemswall=$( grep 'total amount of wall' hafs_forecast.out |awk '{print int($8)}' )
