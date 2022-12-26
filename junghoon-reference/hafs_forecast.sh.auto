@@ -50,7 +50,7 @@ init_time=$(( initend-start ))
 cleanbegin=$( stat --format=%X atm.nest02.f126.nc )
 cleanup_time=$(( end-cleanbegin ))
 
-runtime() {
+count() {
 	 awk '{
              phase_time_count+=$10;
              phase_count++;
@@ -70,7 +70,7 @@ runtime() {
 }
 
 # Time spent in phase 1 & 2
-tphase=$( grep phase hafs_forecast.??? )
+tphase=$( grep phase hafs_forecast.??? | count )
 
 # Average time spent in phase 1 & 2 in each 3hr period
 nphase=$(( tphase / 42 ))
