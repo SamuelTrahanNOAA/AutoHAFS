@@ -131,14 +131,33 @@ supafast-n16o29p42t3-io2w7p14-hy120t2-dt72-stack128-aeedeb5b 60 47 126 42 3 supa
 # 48 nodes total.
 supafast-n16o29p32t4-io2w8p16-hy120t2-dt72-stack128-6b2_d4j4 60 47 126 42 3 supafast cores missing 1671981144 1671981152 1671987050 1671987191 6047 8 141 5572 195 6037 /lfs/h2/oar/stmp/samuel.trahan/supafast-n16o29p32t4-io2w8p16-hy120t2-dt72-stack128-6b2_d4j4
 
+
+
 # 49 nodes total.
+# note: 62tvnicq and yaq6hj5s are square but mislabeled as revppn
+
+
+supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-218s53si 60 47 126 42 3 supafast cores  1672020462 1672020471 1672026115 1672026256 5794 9 141 5308 126 5784 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-218s53si
+supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-divppn-4bvt7hhk 60 47 126 42 3 supafast cores  1672039460 1672039469 1672045105 1672045246 5786 9 141 5306 126 5776 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-divppn-4bvt7hhk
+
+
 supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-54jl4uav 60 47 126 42 3 supafast cores missing 1672000992 1672001002 1672006713 1672001002 5862 10 -5711 5380 128 5851 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-54jl4uav
 supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-hi16gyk_ 60 47 126 42 3 supafast cores missing 1672009837 1672009847 1672015674 1672009847 5978 10 -5827 5493 130 5966 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-hi16gyk_
-supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-q13u4onq 60 47 126 42 3 supafast cores missing 1672000919 1672000929 1672006669 1672000929 5865 10 -5740 5382 128 5853 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-q13u4onq
-supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-gsjwds15 60 47 126 42 3 supafast cores missing 1672001621 1672001631 1672007338 1672001631 5858 10 -5707 5375 127 5847 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-gsjwds15
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-q13u4onq 60 47 126 42 3 supafast cores missing 1672000919 1672000929 1672006669 1672000929 5865 10 -5740 5382 128 5853 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-q13u4onq
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-gsjwds15 60 47 126 42 3 supafast cores missing 1672001621 1672001631 1672007338 1672001631 5858 10 -5707 5375 127 5847 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-gsjwds15
+
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-divppn-10va1z36 60 47 126 42 3 supafast cores  1672059714 1672059724 1672065421 1672065563 5849 10 142 5373 127 5838 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-divppn-10va1z36
+
 
 supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-p25mfplv 60 47 126 42 3 supafast cores missing 1672001074 1672001082 1672006839 1672001082 5904 8 -5757 5426 129 5895 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-p25mfplv
-supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-1u8gwslg 60 47 126 42 3 supafast cores missing 1672001134 1672001145 1672006906 1672001145 5914 11 -5761 5431 129 5902 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-1u8gwslg
+supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-1u8gwslg 60 47 126 42 3 supafast cores missing 1672001134 1672001145 1672006906 1672001145 5914 11 -5761 5431 129 5902 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-1u8gwslg
+supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9r46ldv8 60 47 126 42 3 supafast cores  1672020617 1672020630 1672026381 1672020630 5905 13 -5751 5429 129 5891 /lfs/h2/oar/stmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9r46ldv8
+supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-yaq6hj5s 60 47 126 42 3 supafast cores  1672020675 1672020689 1672026501 1672020689 5967 14 -5812 5485 130 5952 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-yaq6hj5s
 
-supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-qt5jiht5 60 47 126 42 3 supafast cores missing 1672001188 1672001198 1672007076 1672001198 6030 10 -5878 5550 132 6019 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-qt5jiht5
+
+supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-qt5jiht5 60 47 126 42 3 supafast cores missing 1672001188 1672001198 1672007076 1672001198 6030 10 -5878 5550 132 6019 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-qt5jiht5
 supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-d0mnfv_n 60 47 126 42 3 supafast cores missing 1672001449 1672001460 1672007384 1672001460 6076 11 -5924 5602 133 6064 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-d0mnfv_n
+supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-r9yjxlo5 60 47 126 42 3 supafast cores  1672020574 1672020587 1672026452 1672020587 6020 13 -5865 5545 132 6006 /lfs/h2/oar/stmp/samuel.trahan/supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-r9yjxlo5
+
+
+
