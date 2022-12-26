@@ -1,0 +1,144 @@
+# Name | dt Seconds | Nodes | threads per node | threads per process | exe | OMP_PLACES | total MPI ranks | start time | init end time | runtime of mpiexec | integration end time | exit time | time spent in phase 1 & 2 | average time in phase 1 & 2 in 3 hour periods | wallclock reported by NEMS | directory
+
+# First line has incorrect init & cleanup times due to bug in initial script:
+fv3_highopt.exe-62-2-124 60 49 124 62 2 fv3_highopt.exe cores 3038 1670463135 1670469899 1670469934 1670470078 6943 6764 144 6100 148 6856 auto-fv3_highopt.exe-62-2-124-108137-23043 
+
+# The rest of the lines have valid data:
+
+fv3_highopt.exe-62-2-60s 60 49 124 62 2 fv3_highopt.exe cores 3038 1670563396 1670563444 1670570069 1670570234 6838 48 165 6107 148 6789 auto-fv3_highopt.exe-62-2-60s-3092
+fv3_ipftz.exe-62-2-60s 60 49 124 62 2 fv3_ipftz.exe cores 3038 1670563813 1670563867 1670570520 1670570685 6872 54 165 6127 149 6816 auto-fv3_ipftz.exe-62-2-60s-31048
+fv3_nocons-hycom-62-2-60s 60 49 124 62 2 fv3_nocons-hycom cores 3038 1671151323 1671151375 1671157985 1671158150 6827 52 165 6102 148 6773 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_nocons-hycom-62-2-60s-2433
+fv3_nocons-hycom-62-2-60s 60 49 124 62 2 fv3_nocons-hycom cores 3038 1671151493 1671151543 1671158147 1671158313 6820 50 166 6100 148 6768 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_nocons-hycom-62-2-60s-22564
+fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671152248 1671152296 1671158914 1671159082 6834 48 168 6113 149 6783 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-62-2-60s-2299
+fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671152410 1671152473 1671159076 1671159241 6831 63 165 6093 148 6779 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-62-2-60s-4901
+fv3_original-hycom-62-2-60s 60 49 124 62 2 fv3_original-hycom cores 3038 1671152576 1671152625 1671159613 1671159779 7203 49 166 6465 157 7152 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_original-hycom-62-2-60s-16203
+fv3_original-hycom-62-2-60s 60 49 124 62 2 fv3_original-hycom cores 3038 1671152746 1671152829 1671159790 1671159955 7209 83 165 6455 157 7141 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_original-hycom-62-2-60s-24562
+fv3_O3-prec-cons-noc-62-2-60s 60 49 124 62 2 fv3_O3-prec-cons-noc cores 3038 1671152950 1671153000 1671159922 1671160087 7137 50 165 6423 156 7086 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_O3-prec-cons-noc-62-2-60s-5604
+fv3_O3-prec-cons-noc-62-2-60s 60 49 124 62 2 fv3_O3-prec-cons-noc cores 3038 1671153146 1671153199 1671160153 1671160319 7173 53 166 6447 157 7118 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_O3-prec-cons-noc-62-2-60s-5448
+fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671231930 1671232142 1671238759 1671238925 6995 212 166 6092 148 6781 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-62-2-60s-25198
+fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671231930 1671232142 1671238767 1671238932 7002 212 165 6095 148 6789 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-62-2-60s-28472
+fv3_original-hycom-62-2-60s 60 49 124 62 2 fv3_original-hycom cores 3038 1671232207 1671232267 1671239282 1671239448 7241 60 166 6445 157 7179 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_original-hycom-62-2-60s-2160
+fv3_original-hycom-62-2-60s 60 49 124 62 2 fv3_original-hycom cores 3038 1671232780 1671232834 1671239786 1671239951 7171 54 165 6443 157 7115 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_original-hycom-62-2-60s-31378
+fv3_ip-faster-hycom-62-2-60s 60 49 124 62 2 fv3_ip-faster-hycom cores 3038 1671234715 1671234868 1671241419 1671241582 6867 153 163 6039 147 6712 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ip-faster-hycom-62-2-60s-19649
+fv3_ip-faster-hycom-62-2-60s 60 49 124 62 2 fv3_ip-faster-hycom cores 3038 1671234715 1671234869 1671241435 1671241600 6885 154 165 6054 147 6730 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ip-faster-hycom-62-2-60s-6639
+fv3_faster-hycom-62-2-60s 60 49 124 62 2 fv3_faster-hycom cores 3038 1671234715 1671234864 1671241478 1671241643 6928 149 165 6110 149 6777 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_faster-hycom-62-2-60s-19034
+fv3_faster-hycom-62-2-60s 60 49 124 62 2 fv3_faster-hycom cores 3038 1671234715 1671234868 1671241486 1671241650 6935 153 164 6106 148 6780 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_faster-hycom-62-2-60s-4870
+fv3_O3-prec-cons-noc-62-2-60s 60 49 124 62 2 fv3_O3-prec-cons-noc cores 3038 1671234714 1671234868 1671241795 1671241959 7245 154 164 6421 156 7089 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_O3-prec-cons-noc-62-2-60s-32594
+fv3_O3-prec-cons-noc-62-2-60s 60 49 124 62 2 fv3_O3-prec-cons-noc cores 3038 1671234714 1671234863 1671241827 1671241993 7279 149 166 6457 157 7129 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_O3-prec-cons-noc-62-2-60s-6612
+stack2048M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671254891 1671254955 1671261560 1671261725 6834 64 165 6095 148 6769 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack2048M_fv3_ftz-nocons-hycom-62-2-60s-29566
+stack2048M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671254890 1671254955 1671261570 1671261737 6847 65 167 6106 148 6780 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack2048M_fv3_ftz-nocons-hycom-62-2-60s-11831
+stack1024M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671255261 1671255321 1671261916 1671262080 6819 60 164 6091 148 6757 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack1024M_fv3_ftz-nocons-hycom-62-2-60s-19320
+stack1024M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671255252 1671255315 1671261932 1671262096 6844 63 164 6107 148 6780 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack1024M_fv3_ftz-nocons-hycom-62-2-60s-12915
+stack512M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671255842 1671255896 1671262511 1671262676 6834 54 165 6109 149 6778 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack512M_fv3_ftz-nocons-hycom-62-2-60s-8589
+stack512M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671259144 1671259198 1671265793 1671265958 6814 54 165 6088 148 6760 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack512M_fv3_ftz-nocons-hycom-62-2-60s-3302
+stack256M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671259446 1671259495 1671266109 1671266275 6829 49 166 6099 148 6778 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack256M_fv3_ftz-nocons-hycom-62-2-60s-20254
+stack256M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671259768 1671259819 1671266428 1671266595 6827 51 167 6099 148 6774 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack256M_fv3_ftz-nocons-hycom-62-2-60s-4488
+stack128M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671260330 1671260378 1671266999 1671267164 6834 48 165 6117 149 6784 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack128M_fv3_ftz-nocons-hycom-62-2-60s-8383
+stack128M_fv3_ftz-nocons-hycom-62-2-60s 60 49 124 62 2 fv3_ftz-nocons-hycom cores 3038 1671260373 1671260429 1671267084 1671267248 6875 56 164 6146 149 6818 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack128M_fv3_ftz-nocons-hycom-62-2-60s-3726
+stack2048M_fv3_ftz-nocons-hycom-42-3-60s 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671562708 1671562757 1671569173 1671569335 6627 49 162 6106 148 6577 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack2048M_fv3_ftz-nocons-hycom-42-3-60s-28015
+stack2048M_fv3_ftz-nocons-hycom-42-3-60s 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671564064 1671564114 1671570505 1671570669 6605 50 164 6093 148 6553 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack2048M_fv3_ftz-nocons-hycom-42-3-60s-6599
+stack2048M_fv3_ftz-nocons-hycom-42-3-60s 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671564227 1671564271 1671570687 1671570850 6623 44 163 6104 148 6577 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack2048M_fv3_ftz-nocons-hycom-42-3-60s-3431
+stack2048M_fv3_ftz-nocons-hycom-42-3-60s 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671564343 1671564390 1671570800 1671570963 6620 47 163 6101 148 6571 /lfs/h2/oar/ptmp/samuel.trahan/auto-stack2048M_fv3_ftz-nocons-hycom-42-3-60s-17457
+fv3_ftz-nocons-hycom-32-4-60s 60 51 128 32 4 fv3_ftz-nocons-hycom cores 1632 1671572930 1671572976 1671579275 1671579435 6505 46 160 6064 147 6459 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-32-4-60s-1888
+fv3_ftz-nocons-hycom-32-4-60s 60 51 128 32 4 fv3_ftz-nocons-hycom cores 1632 1671573103 1671573148 1671579453 1671579613 6510 45 160 6073 148 6465 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-32-4-60s-6582
+fv3_ftz-nocons-hycom-32-4-60s 60 51 128 32 4 fv3_ftz-nocons-hycom cores 1632 1671573268 1671573314 1671579606 1671579767 6499 46 161 6056 147 6452 /lfs/h2/oar/ptmp/samuel.trahan/auto-fv3_ftz-nocons-hycom-32-4-60s-21132
+hy60t2_fv3_ftz-nocons-hycom-42-3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671577702 1671577715 1671584252 1671584414 6712 13 162 6208 151 6698 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-42-3-60s-18140
+hy60t2_fv3_ftz-nocons-hycom-42-3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671577852 1671577871 1671584320 1671584483 6631 19 163 6098 148 6610 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-42-3-60s-31304
+hy60t2_fv3_ftz-nocons-hycom-42-3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671578016 1671578031 1671584456 1671584620 6604 15 164 6089 148 6588 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-42-3-60s-22318
+hy60t2_fv3_ftz-nocons-hycom-42-3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671578196 1671578218 1671584636 1671584799 6603 22 163 6083 148 6579 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-42-3-60s-6824
+hy60t2_fv3_ftz-nocons-hycom-846t7-60s 60 47 126 18 7 fv3_ftz-nocons-hycom cores missing 1671583094 1671583105 1671590539 1671590698 7604 11 159 7212 175 7592 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-846t7-60s-4849
+hy60t2_fv3_ftz-nocons-hycom-752t8-60s 60 47 128 16 8 fv3_ftz-nocons-hycom cores missing 1671585737 1671585746 1671592624 1671592784 7047 9 160 6666 162 7037 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-752t8-60s-20175
+hy60t2_fv3_ftz-nocons-hycom-1504t4-60s 60 47 128 32 4 fv3_ftz-nocons-hycom cores missing 1671586522 1671586536 1671592854 1671593015 6493 14 161 6029 147 6478 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-1504t4-60s-31297
+hy60t2_fv3_ftz-nocons-hycom-1504t4-60s 60 47 128 32 4 fv3_ftz-nocons-hycom cores missing 1671587121 1671587133 1671593469 1671593629 6508 12 160 6050 147 6495 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-1504t4-60s-6981
+hy60t2_fv3_ftz-nocons-hycom-1504t4-60s 60 47 128 32 4 fv3_ftz-nocons-hycom cores missing 1671587449 1671587468 1671593783 1671593943 6494 19 160 6029 147 6474 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-1504t4-60s-16931
+hy60t2_fv3_ftz-nocons-hycom-1974t3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671589347 1671589361 1671595796 1671595959 6612 14 163 6099 148 6596 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-1974t3-60s-2722
+hy60t2_fv3_ftz-nocons-hycom-1974t3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671589657 1671589670 1671596089 1671596251 6594 13 162 6084 148 6580 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-1974t3-60s-12834
+hy60t2_fv3_ftz-nocons-hycom-1974t3-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671589960 1671589976 1671596397 1671596560 6600 16 163 6085 148 6583 /lfs/h2/oar/ptmp/samuel.trahan/auto-hy60t2_fv3_ftz-nocons-hycom-1974t3-60s-27015
+
+########################################################################
+# JungHoon tests
+
+These first few use a strange notation:
+#126b = 25 nodes for outer, 20 nodes for inner
+#126c = 33 nodes for outer, 12 nodes for inner (runtime >3 hrs)
+#126d = 27 nodes for outer, 18 nodes for inner
+#126 = 30 nodes for outer, 15 nodes for inner
+
+JH-fv3_ftz-nocons-hycom-42-3-60s 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671592005 1671592032 1671599395 1671599540 7535 27 145 7067 172 7506 /lfs/h2/oar/ptmp/samuel.trahan/auto-JH-fv3_ftz-nocons-hycom-42-3-60s-22461
+JH-fv3_ftz-nocons-hycom-42-3-126b 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671593158 1671593185 1671601514 1671601658 8500 27 144 8033 195 8472 /lfs/h2/oar/ptmp/samuel.trahan/auto-JH-fv3_ftz-nocons-hycom-42-3-126b-24312
+JH-fv3_ftz-nocons-hycom-42-3-126d 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671646164 1671646192 1671653970 1671654115 7951 28 145 7479 182 7922 /lfs/h2/oar/ptmp/samuel.trahan/auto-JH-fv3_ftz-nocons-hycom-42-3-126d-13778
+
+# This is 30 nodes for outer, 15 for inner:
+JH-fv3_ftz-nocons-hycom--1974t3hy120t2-60s 60 47 126 42 3 fv3_ftz-nocons-hycom cores missing 1671652172 1671652183 1671660620 1671660765 8593 11 145 8056 196 8580 /lfs/h2/oar/ptmp/samuel.trahan/auto-JH-fv3_ftz-nocons-hycom--1974t3hy120t2-60s-19005
+
+# The later ones should be obvious.
+
+JH-fv3_ftz-nocons-hycom-42-3-126 60 50 126 42 3 fv3_ftz-nocons-hycom cores 2100 1671665483 1671665507 1671672887 1671673030 7547 24 143 7068 172 7522 /lfs/h2/oar/ptmp/samuel.trahan/auto-JH-fv3_ftz-nocons-hycom-42-3-126-8360
+ftz-nocons-hycom-in14ou31io2p42t3-hy120t2-f_wp01ot 60 47 126 42 3 ftz-nocons-hycom cores missing 1671666037 1671666049 1671673366 1671673510 7473 12 144 6992 170 7459 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in14ou31io2p42t3-hy120t2-f_wp01ot
+ftz-nocons-hycom-in13ou32io2p42t3-hy120t2-_ioy3d60 60 47 126 42 3 ftz-nocons-hycom cores missing 1671665860 1671665869 1671673409 1671673550 7690 9 141 7215 175 7679 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in13ou32io2p42t3-hy120t2-_ioy3d60
+ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-tz0_kcq2 60 47 126 42 3 ftz-nocons-hycom cores missing 1671668144 1671668156 1671675375 1671675518 7374 12 143 6888 168 7361 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-tz0_kcq2
+ftz-nocons-hycom-in15ou30io2p42t3-hy120t2-enoy9ggm 60 47 126 42 3 ftz-nocons-hycom cores missing 1671667142 1671667152 1671677721 1671677865 10723 10 144 10042 244 10712 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in15ou30io2p42t3-hy120t2-enoy9ggm
+ftz-nocons-hycom-in13ou32io2p42t3-hy120t2-4atq9kgf 60 47 126 42 3 ftz-nocons-hycom cores missing 1671673660 1671673670 1671681424 1671681564 7904 10 140 7241 176 7892 /lfs/h2/oar/stmp/samuel.trahan/ftz-nocons-hycom-in13ou32io2p42t3-hy120t2-4atq9kgf
+ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-awnom4z7 60 47 126 42 3 ftz-nocons-hycom cores missing 1671677591 1671677609 1671684839 1671684983 7392 18 144 6902 168 7373 /lfs/h2/oar/stmp/samuel.trahan/ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-awnom4z7
+ftz-nocons-hycom-in17ou28io2p42t3-hy120t2-wdx4tdp0 60 47 126 42 3 ftz-nocons-hycom cores missing 1671677971 1671677982 1671685678 1671685823 7852 11 145 7044 171 7839 /lfs/h2/oar/stmp/samuel.trahan/ftz-nocons-hycom-in17ou28io2p42t3-hy120t2-wdx4tdp0
+ftz-nocons-hycom-in11ou34io2p42t3-hy120t2-xc13h9bd 60 47 126 42 3 ftz-nocons-hycom cores missing 1671678089 1671678101 1671686507 1671686650 8561 12 143 8073 196 8548 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in11ou34io2p42t3-hy120t2-xc13h9bd
+ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-dueo5ujp 60 47 126 42 3 ftz-nocons-hycom cores missing 1671727949 1671727965 1671735208 1671735353 7404 16 145 6902 168 7387 /lfs/h2/oar/stmp/samuel.trahan/ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-dueo5ujp
+ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-qw74zokk 60 47 126 42 3 ftz-nocons-hycom cores missing 1671739791 1671739810 1671747079 1671747223 7432 19 144 6922 168 7411 /lfs/h2/oar/stmp/samuel.trahan/ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-qw74zokk
+ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-tqua2m4x 60 47 126 42 3 ftz-nocons-hycom cores missing 1671739791 1671739809 1671747178 1671747322 7531 18 144 7023 171 7511 /lfs/h2/oar/stmp/samuel.trahan/ftz-nocons-hycom-in16ou29io2p42t3-hy120t2-tqua2m4x
+ftz-nocons-hycom-in16ou29io1p42t3-hy120t2-wgb90s3r 60 47 126 42 3 ftz-nocons-hycom cores missing 1671739946 1671739971 1671747244 1671747387 7441 25 143 6933 169 7415 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in16ou29io1p42t3-hy120t2-wgb90s3r
+ftz-nocons-hycom-in15ou32io2p42t3-hy120t2-q8d4bocx 60 47 126 42 3 ftz-nocons-hycom cores missing 1671748995 1671749006 1671756142 1671756286 7291 11 144 6777 165 7278 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in15ou32io2p42t3-hy120t2-q8d4bocx
+ftz-nocons-hycom-in14ou33io2p42t3-hy120t2-5k8zrd4r 60 47 126 42 3 ftz-nocons-hycom cores missing 1671748908 1671748921 1671756210 1671756354 7446 13 144 6937 169 7432 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in14ou33io2p42t3-hy120t2-5k8zrd4r
+ftz-nocons-hycom-in16ou31io2p42t3-hy120t2-jnthct64 60 47 126 42 3 ftz-nocons-hycom cores missing 1671749700 1671749713 1671756829 1671756973 7273 13 144 6779 165 7258 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in16ou31io2p42t3-hy120t2-jnthct64
+ftz-nocons-hycom-in17ou30io2p42t3-hy120t2-u2a382_7 60 47 126 42 3 ftz-nocons-hycom cores missing 1671749754 1671749766 1671757449 1671757593 7839 12 144 7338 178 7826 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in17ou30io2p42t3-hy120t2-u2a382_7
+ftz-nocons-hycom-in15ou30io2p42t3-hy120t2-v25ze1sb 60 47 126 42 3 ftz-nocons-hycom cores missing 1671765378 1671765390 1671772901 1671773044 7666 12 143 7180 175 7653 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in15ou30io2p42t3-hy120t2-v25ze1sb
+ftz-nocons-hycom-in18ou29io2p42t3-hy120t2-mh_5xp37 60 47 126 42 3 ftz-nocons-hycom cores missing 1671774867 1671774878 1671782181 1671782327 7460 11 146 6947 169 7447 /lfs/h2/oar/ptmp/samuel.trahan/ftz-nocons-hycom-in18ou29io2p42t3-hy120t2-mh_5xp37
+supafast-in16ou29io2p42t3-hy120t2-outer-k2n4-kfdh4n7y 60 47 126 42 3 supafast cores missing 1671776509 1671776520 1671783437 1671783580 7071 11 143 6579 160 7059 /lfs/h2/oar/stmp/samuel.trahan/supafast-in16ou29io2p42t3-hy120t2-outer-k2n4-kfdh4n7y
+
+
+supafast-in16ou29io2p42t3-hy120t2-dt72-avlrbn89 60 47 126 42 3 supafast cores missing 1671782469 1671782481 1671788507 1671788649 6180 12 142 5658 165 6166 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in16ou29io2p42t3-hy120t2-dt72-avlrbn89
+supafast-in16ou29io2p42t3-hy120t2-6if1vdkr 60 47 126 42 3 supafast cores missing 1671781816 1671781837 1671789081 1671789224 7408 21 143 6901 168 7386 /lfs/h2/oar/stmp/samuel.trahan/supafast-in16ou29io2p42t3-hy120t2-6if1vdkr
+supafast-in16ou29io2p42t3-hy120t2-mfy7kh8x 60 47 126 42 3 supafast cores missing 1671782185 1671782199 1671789427 1671789571 7386 14 144 6898 168 7370 /lfs/h2/oar/stmp/samuel.trahan/supafast-in16ou29io2p42t3-hy120t2-mfy7kh8x
+supafast-in16ou29io2p42t3-hy120t2-m94nkcyu 60 47 126 42 3 supafast cores missing 1671782180 1671782195 1671789434 1671789577 7397 15 143 6907 168 7381 /lfs/h2/oar/stmp/samuel.trahan/supafast-in16ou29io2p42t3-hy120t2-m94nkcyu
+supafast-in15ou30io2p42t3-hy120t2-lay-divppn-x3nkqvcx 60 47 126 42 3 supafast cores missing 1671782516 1671782529 1671789980 1671790124 7608 13 144 7121 173 7594 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in15ou30io2p42t3-hy120t2-lay-divppn-x3nkqvcx
+supafast-in15ou30io2p42t3-hy120t2-lay-revppn-8ce48d5j 60 47 126 42 3 supafast cores missing 1671787022 1671787035 1671794243 1671794386 7364 13 143 6869 167 7349 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in15ou30io2p42t3-hy120t2-lay-revppn-8ce48d5j
+
+
+supafast-in14ou31io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-ea3foxnk 60 47 126 42 3 supafast cores missing 1671866913 1671866924 1671873690 1671873833 6920 11 143 6427 156 6907 /lfs/h2/oar/stmp/samuel.trahan/supafast-in14ou31io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-ea3foxnk
+supafast-in14ou31io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-g6vs7mwr 60 47 126 42 3 supafast cores missing 1671867111 1671867122 1671873883 1671874026 6915 11 143 6423 156 6902 /lfs/h2/oar/stmp/samuel.trahan/supafast-in14ou31io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-g6vs7mwr
+supafast-in15ou30io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-tmpzi743 60 47 126 42 3 supafast cores missing 1671871812 1671871824 1671878576 1671878720 6908 12 144 6431 156 6895 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in15ou30io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-tmpzi743
+supafast-in15ou30io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-nv3kk387 60 47 126 42 3 supafast cores missing 1671872059 1671872074 1671879138 1671879279 7220 15 141 6732 164 7206 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in15ou30io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-nv3kk387
+supafast-in14ou31io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n9-dt60-0nmdy1mr 60 47 126 42 3 supafast cores missing 1671872329 1671872340 1671879439 1671879582 7253 11 143 6764 164 7241 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in14ou31io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-0nmdy1mr
+supafast-in17ou28io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-br8xulzz 60 47 126 42 3 supafast cores missing 1671875550 1671875562 1671882468 1671882613 7063 12 145 6575 160 7049 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in17ou28io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-br8xulzz
+supafast-in17ou28io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-xc2306vr 60 47 126 42 3 supafast cores missing 1671879439 1671879450 1671886385 1671886527 7088 11 142 6596 160 7076 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in17ou28io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-xc2306vr
+supafast-in14ou31io2p42t3-hy120t2-lay-square-ok2n4-ik4n9-dt60-4znsj0ay 60 47 126 42 3 supafast cores missing 1671886701 1671886711 1671893952 1671894091 7390 10 139 6918 168 7379 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in14ou31io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-4znsj0ay
+supafast-in15ou30io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-ptwnptu3 60 47 126 42 3 supafast cores missing 1671902994 1671903010 1671910191 1671910335 7341 16 144 6848 167 7323 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in15ou30io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-ptwnptu3
+supafast-in15ou30io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-l7r2nv1f 60 47 126 42 3 supafast cores missing 1671904300 1671904310 1671911252 1671911396 7096 10 144 6605 161 7084 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in15ou30io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-l7r2nv1f
+supafast-in17ou28io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-a52nci0g 60 47 126 42 3 supafast cores missing 1671915754 1671915764 1671922821 1671922963 7209 10 142 6704 163 7197 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in17ou28io2p42t3-hy120t2-lay-revppn-ok2n4-ik4n6-dt60-a52nci0g
+supafast-in17ou28io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-8t4rlf7s 60 47 126 42 3 supafast cores missing 1671916221 1671916232 1671923270 1671923413 7192 11 143 6692 163 7179 /lfs/h2/oar/ptmp/samuel.trahan/supafast-in17ou28io2p42t3-hy120t2-lay-square-ok2n4-ik4n6-dt60-8t4rlf7s
+
+# 72s timestep tests
+
+supafast-n16o29p42t3-io2w42p42-hy120t2-dt72-n0uiudnn 60 47 126 42 3 supafast cores missing 1671947491 1671947503 1671953542 1671953685 6194 12 143 5672 199 6180 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o29p42t3-io2w42p42-hy120t2-dt72-n0uiudnn
+supafast-n16o29p42t3-io2w42p42-hy120t2-dt72-stack128-akhn1sxt 60 47 126 42 3 supafast cores missing 1671947617 1671947627 1671953647 1671953790 6173 10 143 5661 198 6162 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o29p42t3-io2w42p42-hy120t2-dt72-stack128-akhn1sxt
+supafast-n16o29p42t3-io2w5p10-hy120t2-dt72-fdql26ke 60 47 126 42 3 supafast cores missing 1671952389 1671952409 1671958500 1671958639 6250 20 139 5653 198 6231 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o29p42t3-io2w5p10-hy120t2-dt72-fdql26ke
+supafast-n16o29p42t3-io2w5p10-hy120t2-dt72-stack128-lcy9spg9 60 47 126 42 3 supafast cores missing 1671952389 1671952409 1671958515 1671958654 6265 20 139 5662 198 6246 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o29p42t3-io2w5p10-hy120t2-dt72-stack128-lcy9spg9
+supafast-n16o29p42t3-io2w14p14-hy120t2-dt72-stack128-k6o8yuw3 60 47 126 42 3 supafast cores missing 1671952882 1671952893 1671958919 1671959059 6177 11 140 5668 199 6165 /lfs/h2/oar/stmp/samuel.trahan/supafast-n16o29p42t3-io2w14p14-hy120t2-dt72-stack128-k6o8yuw3
+supafast-n16o29p42t3-io2w7p14-hy120t2-dt72-stack128-aeedeb5b 60 47 126 42 3 supafast cores missing 1671953102 1671953113 1671959189 1671959330 6228 11 141 5675 199 6215 /lfs/h2/oar/stmp/samuel.trahan/supafast-n16o29p42t3-io2w7p14-hy120t2-dt72-stack128-aeedeb5b
+
+
+# 72s timestep with 128 threads per node for compute.
+
+# 48 nodes total.
+supafast-n16o29p32t4-io2w8p16-hy120t2-dt72-stack128-6b2_d4j4 60 47 126 42 3 supafast cores missing 1671981144 1671981152 1671987050 1671987191 6047 8 141 5572 195 6037 /lfs/h2/oar/stmp/samuel.trahan/supafast-n16o29p32t4-io2w8p16-hy120t2-dt72-stack128-6b2_d4j4
+
+# 49 nodes total.
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-54jl4uav 60 47 126 42 3 supafast cores missing 1672000992 1672001002 1672006713 1672001002 5862 10 -5711 5380 128 5851 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-54jl4uav
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-hi16gyk_ 60 47 126 42 3 supafast cores missing 1672009837 1672009847 1672015674 1672009847 5978 10 -5827 5493 130 5966 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-hi16gyk_
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-q13u4onq 60 47 126 42 3 supafast cores missing 1672000919 1672000929 1672006669 1672000929 5865 10 -5740 5382 128 5853 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-q13u4onq
+supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-gsjwds15 60 47 126 42 3 supafast cores missing 1672001621 1672001631 1672007338 1672001631 5858 10 -5707 5375 127 5847 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n15o31p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-gsjwds15
+
+supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-p25mfplv 60 47 126 42 3 supafast cores missing 1672001074 1672001082 1672006839 1672001082 5904 8 -5757 5426 129 5895 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-p25mfplv
+supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-1u8gwslg 60 47 126 42 3 supafast cores missing 1672001134 1672001145 1672006906 1672001145 5914 11 -5761 5431 129 5902 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n16o30p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-1u8gwslg
+
+supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-qt5jiht5 60 47 126 42 3 supafast cores missing 1672001188 1672001198 1672007076 1672001198 6030 10 -5878 5550 132 6019 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-revppn-qt5jiht5
+supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-d0mnfv_n 60 47 126 42 3 supafast cores missing 1672001449 1672001460 1672007384 1672001460 6076 11 -5924 5602 133 6064 /lfs/h2/oar/ptmp/samuel.trahan/supafast-n17o29p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-d0mnfv_n
