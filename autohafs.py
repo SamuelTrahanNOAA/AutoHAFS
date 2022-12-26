@@ -4,19 +4,21 @@ import sys
 import os
 import tempfile
 import subprocess
+import math
 
 def main():
 
     where={
         'noscrub':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/',
         'HAFS':   '/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/',
-#        'scrub':  '/lfs/h2/oar/ptmp/samuel.trahan/',
         'exebase':'supafast',
         'template_dir':'/lfs/h2/oar/esrl/noscrub/samuel.trahan/junghoon-reference/',
         'autohafs_dir': os.path.join(os.path.dirname(os.path.realpath(__file__)),'junghoon-reference'),
     }
 
-    dt72x128node(**where)
+    #        'scrub':  '/lfs/h2/oar/ptmp/samuel.trahan/',
+
+    with128nodes(dt=72,**where)
     
 ########################################################################
 
@@ -37,85 +39,30 @@ def decomp_tests(**kwargs):
               best_layout=None,
               more_prefix='decomp-test-',**kwargs)
     generate_and_submit(replace)
-    
-def layout_tests(**kwargs):
-    dts = [ 60, 72 ]
-    inners = [ 14, 15, 17 ]
-    node_count = 45
-    these = {
-        'lay-divppn-': most_square_layout_that_integer_divides_ppn,
-        #'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
-        #'lay-square-': most_square_layout,
-    }
-    for dt_atmos in dts:
-        for inner_nodes in inners:
-            outer_nodes = node_count-inner_nodes
-            dtprefix='dt'+str(dt_atmos)
-            for more_prefix, best_layout in these.items():
-                args={
-                        'more_prefix':more_prefix+'ok2n4-ik4n6-'+dtprefix+'-',
-                        'best_layout':best_layout,
-                        'inner_nodes':inner_nodes,
-                        'outer_nodes':outer_nodes,
-                        'comp_ppn':42,
-                        'comp_tpp':3,
-                        'outer_k_split':2,
-                        'outer_n_split':4,
-                        }
-                for k,v in kwargs.items():
-                    if not k in args:
-                        args[k]=v
-                if dt_atmos==60:
-                    args['inner_k_split']=4
-                    args['inner_n_split']=6
-                elif dt_atmos==72:
-                    args['inner_k_split']=4
-                    args['inner_n_split']=9
-                else:
-                    raise('bad dt atmos '+str(dt_atmos))
-                replace=make_hash(**args)
-                generate_and_submit(replace)
 
-def dt72(**kwargs):
-    # 16 node config with 72s timestep
-    replace=make_hash(inner_nodes=16,
-                      outer_nodes=29,
-                      comp_ppn=42,
-                      comp_tpp=3,
-                      write_tasks_per_group=8,
-                      io_ppn=16,
-                      io_tpp=8,
-                      io_omp_num_threads=4,
-                      outer_k_split=2,
-                      outer_n_split=4,
-                      inner_k_split=4,
-                      inner_n_split=9,
-                      dt_atmos=72,
-                      OMP_STACKSIZE="128M",
-                      more_prefix='dt72-stack128-',
-                      **kwargs)
-    generate_and_submit(replace)
-
-def dt72x128node(**kwargs):
+def with128nodes(dt,**kwargs):
     fv3_compute_nodes=46
-    inner_nodes_list=[ 15, 16, 17 ]
+    inner_nodes_list=[ 14 ]
     isubmit=0
-    these = {
+    layouts = {
         #'lay-divppn-': most_square_layout_that_integer_divides_ppn,
-        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
-        #'lay-square-': most_square_layout,
+        #'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
+        'lay-square-': most_square_layout,
     }
-    for i in 1 2:
-        for more_prefix, best_layout in these.items():
+    blocksizes = {
+        'bsth-': blocksize_with_one_block_per_thread,
+        '': blocksize_with_lowest_remainder,
+    }
+    blocksize_prefix=''
+    best_blocksize=blocksizes[blocksize_prefix]
+    scrub='/lfs/h2/oar/stmp/samuel.trahan/'
+    for i in 'q':
+        for layout_prefix, best_layout in layouts.items():
             for inner_nodes in inner_nodes_list:
-                isubmit+=1
-                if isubmit<=5:
-                    scrub='/lfs/h2/oar/ptmp/samuel.trahan/'
-                else:
-                    scrub='/lfs/h2/oar/stmp/samuel.trahan/'
                 outer_nodes=fv3_compute_nodes-inner_nodes
                 replace=make_hash(inner_nodes=inner_nodes,
                                   outer_nodes=outer_nodes,
+                                  scrub=scrub,
                                   comp_ppn=32,
                                   comp_tpp=4,
                                   write_tasks_per_group=8,
@@ -126,32 +73,14 @@ def dt72x128node(**kwargs):
                                   outer_n_split=4,
                                   inner_k_split=4,
                                   inner_n_split=9,
-                                  dt_atmos=72,
-                                  walltime='02:20:00',
-                                  scrub=scrub,
+                                  dt_atmos=dt,
+                                  best_layout=best_layout,
+                                  best_blocksize=best_blocksize,
                                   OMP_STACKSIZE="128M",
-                                  more_prefix='dt72-st128-'+more_prefix,
+                                  walltime="02:20:00",
+                                  more_prefix='dt%d-st128-%s%s'%(dt,layout_prefix,blocksize_prefix),
                                   **kwargs)
                 generate_and_submit(replace)
-
-def alternative_fv3_compute_node_count(n,**kwargs):
-    # Try n fv3 compute nodes with nine different inner vs. outer node
-    # counts.  Does not change the I/O or ocean nodes, so the total
-    # job size is n+4 nodes.
-    middle=int(16*n/45.)
-    for i in [ middle-4, middle+4 ]:
-        replace=make_hash(inner_nodes=i,outer_nodes=n-i,**kwargs)
-        generate_and_submit(replace)
-
-def hycom1(**kwargs):
-    # cram hycom&mediator onto one node - ~500 second slower init time
-    replace=make_hash(inner_nodes=16,outer_nodes=29,hycom_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
-    generate_and_submit(replace)
-
-def io1(**kwargs):
-    # cram fv3 io onto one node - sometimes crashes
-    replace=make_hash(inner_nodes=16,outer_nodes=29,io_nodes=1,OMP_STACKSIZE='128M',queue='debug',walltime='00:30:00',**kwargs)
-    generate_and_submit(replace)
 
 
 ########################################################################
@@ -160,15 +89,19 @@ def io1(**kwargs):
     
 def generate_and_submit(replace):
     # Generate the run area, chdir there, and submit the job.
-    fill_auto_files(replace)
-    print('will run in dir',replace['%dir%'])
-    rsync(replace)
+    generate(replace)
     oldcwd=os.getcwd()
     print('chdir',replace["%dir%"])
     os.chdir(replace["%dir%"])
     qsub(replace)
     print('chdir',oldcwd)
     os.chdir(oldcwd)
+    
+def generate(replace):
+    # Generate the run area
+    fill_auto_files(replace)
+    print('will run in dir',replace['%dir%'])
+    rsync(replace)
 
 def rsync(replace):
     # Copy template directory contents to run area.
@@ -199,6 +132,7 @@ def fill_auto_files(replace):
         sys.stderr.write(replace['%exe%']+': cannot execute\n')
     files=[ 'hafs_forecast.sh', 'input_nest02.nml', 'input.nml',
             'model_configure', 'nems.configure', 'clean.sh', 'lookit.sh' ]
+    exe=[ 'clean.sh', 'lookit.sh' ]
     parse_files(indir,outdir,replace,files)
     for afile in files:
         fullfile=os.path.join(outdir,afile)
@@ -206,6 +140,8 @@ def fill_auto_files(replace):
             sys.stderr.write(fullfile+": does not exist")
         if not os.path.getsize(fullfile)>0:
             sys.stderr.write(fullfile+": is empty")
+        if afile in exe:
+            os.chmod(fullfile,0o755)
 
 def parse_files(indir,outdir,replace,files):
     # For each file in `files`, replace text via the `replace` hash
@@ -274,7 +210,12 @@ def most_square_layout(nodes,ppn,nx):
                 bestscore=score
     return [ bestx, besty ]
 
-def best_blocksize(layout_x,layout_y,nx):
+def blocksize_with_one_block_per_thread(layout_x,layout_y,nx,tpp):
+    big_x=math.ceil(float(nx)/layout_x)
+    big_y=math.ceil(float(nx)/layout_y)
+    return math.ceil(float(big_x*big_y)/tpp)
+
+def blocksize_with_lowest_remainder(layout_x,layout_y,nx,tpp):
     return max(nx//layout_x,nx//layout_y)
    
 def make_hash(
@@ -316,6 +257,7 @@ def make_hash(
     
         # Choose algorithms:
         best_layout=most_square_layout,
+        best_blocksize=blocksize_with_lowest_remainder,
         
         #hycom configuration:
         hycom_nodes=2,
@@ -387,8 +329,8 @@ def make_hash(
     else:
         ( outer_layout_x, outer_layout_y ) = outer_layout
         assert(outer_layout_x*outer_layout_y == outer_pes)
-    inner_blocksize=best_blocksize(inner_layout_x,inner_layout_y,inner_grid)
-    outer_blocksize=best_blocksize(outer_layout_x,outer_layout_y,outer_grid)
+    inner_blocksize=best_blocksize(inner_layout_x,inner_layout_y,inner_grid,comp_tpp)
+    outer_blocksize=best_blocksize(outer_layout_x,outer_layout_y,outer_grid,comp_tpp)
 
     # FV3 derived:
     io_pes=write_tasks_per_group*write_groups
