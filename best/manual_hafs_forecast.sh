@@ -13,8 +13,9 @@ set -xue
 cd $PBS_O_WORKDIR
 
 testdir=/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/sorc/hafs_forecast.fd/tests
-exe=$testdir/fv3_32bit.exe
 resultdir=/lfs/h2/oar/esrl/noscrub/samuel.trahan/fv3results
+exebase=32bit
+exe=$testdir/fv3_$exebase.exe
 
 date
 
@@ -22,7 +23,7 @@ date
 set +xue
 # This assumes the fv3_32bit executable was compiled with -DSUPAFAST=ON
 module use $testdir
-module load modules.fv3_32bit
+module load modules.fv3_$exebase
 module load cray-pals
 module list
 
