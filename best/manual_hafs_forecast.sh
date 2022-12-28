@@ -15,6 +15,7 @@ cd $PBS_O_WORKDIR
 testdir=/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/sorc/hafs_forecast.fd/tests
 resultdir=/lfs/h2/oar/esrl/noscrub/samuel.trahan/fv3results
 exebase=32bit
+testname=supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad
 exe=$testdir/fv3_$exebase.exe
 
 date
@@ -48,7 +49,8 @@ mpiexec --cpu-bind core \
         > hafs_forecast.out 2> hafs_forecast.err
 end=$( date +%s )
 
-set +exu
+set +eu
+set -x
 
 # Total runtime of mpiexec
 runtime=$(( end-start ))
@@ -91,12 +93,13 @@ nphase=$(( tphase / 42 ))
 nemswall=$( grep 'total amount of wall' hafs_forecast.out |awk '{print int($8)}' )
 
 mkdir -p $resultdir
-stats="supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad 60 47 126 42 3 supafast cores $TOTAL_TASKS $start $initend $cleanbegin $end $runtime $init_time $cleanup_time $tphase $nphase $nemswall /lfs/h2/oar/stmp/samuel.trahan/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad"
-echo stats >> $resultdir/summary
+stats="$testname 60 47 126 42 3 supafast cores $TOTAL_TASKS $start $initend $cleanbegin $end $runtime $init_time $cleanup_time $tphase $nphase $nemswall $PWD"
+echo $stats
+echo $stats >> $resultdir/summary
 
-mkdir -p $resultdir/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad
-ls -ltr --full-time > $resultdir/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad/timings
-cp -fp hafs_forecast.out hafs_forecast.err manual_hafs_forecast.sh $resultdir/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad/.
-chmod -R a-w $resultdir/supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad
+mkdir -p $resultdir/$testname
+ls -ltr --full-time > $resultdir/$testname/timings
+cp -fp hafs_forecast.out hafs_forecast.err manual_hafs_forecast.sh $resultdir/$testname/.
+chmod -R a-w $resultdir/$testname
 
 exit 0
