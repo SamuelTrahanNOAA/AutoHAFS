@@ -1,7 +1,7 @@
 #!/bin/sh
 #PBS -joe
 #PBS -o job.log
-#PBS -N supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad
+#PBS -N supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-bs16
 #PBS -A HWRF-DEV
 #PBS -q dev
 #PBS -l select=46:mpiprocs=32:ompthreads=4:ncpus=128+1:mpiprocs=16:ompthreads=8:ncpus=128+2:mpiprocs=60:ompthreads=2:ncpus=120
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 testdir=/lfs/h2/oar/esrl/noscrub/samuel.trahan/hafsv1_phase3/sorc/hafs_forecast.fd/tests
 resultdir=/lfs/h2/oar/esrl/noscrub/samuel.trahan/fv3results
 exebase=32bit
-testname=supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-9wa6obad
+testname=supafast-n14o32p32t4-io2w8p16-hy120t2-dt72-st128-lay-square-bs16
 exe=$testdir/fv3_$exebase.exe
 
 date
