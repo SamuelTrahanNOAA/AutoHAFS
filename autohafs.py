@@ -136,8 +136,11 @@ def with32t4(dt,**kwargs):
     # Block size algorithm:
     best_blocksize=blocksizes[blocksize_prefix]
 
-    # Submit two tests of each combination:
-    for i in range(1):
+    # Number tests to submit of each configuration (to get runtime variability)
+    repeat=1
+
+    # Generate and submit everything
+    for i in range(repeat):
         # Loop over all selected layouts.
         for layout_prefix, best_layout in layouts.items():
             # Loop over all selected inner domain node counts:
