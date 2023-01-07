@@ -48,7 +48,12 @@ def main():
     # Using generate_and_submit is convenient when generating many cases at once.
 
     # For convenience, I keep these in subroutines.
-    with128nodes(dt=72,**where)
+
+    # Run several tests with 128 nodes:
+    with32t4(dt=72,**where)
+
+    # Run various blocksizes
+    #blocksize_test(72, [ 8, 16, 32, 64 ], **where)
     
 ########################################################################
 
@@ -103,19 +108,19 @@ def decomp_tests(**kwargs):
         **kwargs)
     generate_and_submit(replace)
 
-def with128nodes(dt,**kwargs):
+def with32t4(dt,**kwargs):
     # This function produces several tests in a loop and submits them all.
 
     # Number of FV3 compute nodes
     fv3_compute_nodes=46
 
     # List of all inner domain node counts to test.
-    inner_nodes_list=[ 13, 14, 15 ]
+    inner_nodes_list=[ 14 ]
 
     # All layout algorithms to test
     layouts = {
         #'lay-divppn-': most_square_layout_that_integer_divides_ppn,
-        'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
+        #'lay-revppn-': reversed_most_square_layout_that_integer_divides_ppn,
         'lay-square-': most_square_layout,
     }
 
@@ -132,7 +137,7 @@ def with128nodes(dt,**kwargs):
     best_blocksize=blocksizes[blocksize_prefix]
 
     # Submit two tests of each combination:
-    for i in range(2):
+    for i in range(1):
         # Loop over all selected layouts.
         for layout_prefix, best_layout in layouts.items():
             # Loop over all selected inner domain node counts:
@@ -194,6 +199,34 @@ def with128nodes(dt,**kwargs):
                 # Make the test directory for this case, and submit hafs_forecast.sh
                 generate_and_submit(replace)
 
+
+def blocksize_test(dt,blocksizes,**kwargs):
+    # This test looked for the ideal blocksize. It turned out to be 16
+    fv3_compute_nodes=46
+    inner_nodes=14
+    outer_nodes=fv3_compute_nodes-inner_nodes
+    for i in range(1):
+        for blocksize in blocksizes:
+                replace=make_hash(inner_nodes=inner_nodes,
+                                  outer_nodes=outer_nodes,
+                                  comp_ppn=32,
+                                  comp_tpp=4,
+                                  write_tasks_per_group=8,
+                                  io_ppn=16,
+                                  io_tpp=8,
+                                  io_omp_num_threads=4,
+                                  outer_k_split=2,
+                                  outer_n_split=4,
+                                  inner_k_split=4,
+                                  inner_n_split=9,
+                                  dt_atmos=dt,
+                                  outer_blocksize=blocksize,
+                                  inner_blocksize=blocksize,
+                                  OMP_STACKSIZE="128M",
+                                  walltime="02:20:00",
+                                  more_prefix='dt%d-bs%d-'%(dt,blocksize),
+                                  **kwargs)
+                generate_and_submit(replace)
 
 ########################################################################
 
@@ -474,9 +507,9 @@ def make_hash(
         assert(outer_layout_x*outer_layout_y == outer_pes)
 
     # Decide the blocksize if it isn't provided:
-    if inner_blocksize is None:
+    if not inner_blocksize:
         inner_blocksize=best_blocksize(inner_layout_x,inner_layout_y,inner_grid,comp_tpp)
-    if outer_blocksize is None:
+    if not outer_blocksize:
         outer_blocksize=best_blocksize(outer_layout_x,outer_layout_y,outer_grid,comp_tpp)
 
     # FV3 I/O derived numbers:
